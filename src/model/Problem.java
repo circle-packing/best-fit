@@ -4,6 +4,7 @@ import com.sun.javafx.beans.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Pablo on 21/11/15.
@@ -26,12 +27,21 @@ public class Problem {
 	public Problem(int count, double power) {
 		circles = new ArrayList<>(count);
 
-		for (int i = 0; i < count; ++i) {
+		for (int i = 1; i <= count; ++i) {
 			circles.add(new Circle(i, Math.pow((double)i, power)));
 		}
 	}
 
 	public List<Circle> getCircles() {
 		return circles;
+	}
+
+	public Solution getRandomSolution(double radius) {
+		Solution sol = new Solution(circles.size());
+		Random rand = new Random();
+		for (Circle circle : circles) {
+			sol.add(circle, new Point(radius * rand.nextDouble(), radius * rand.nextDouble()));
+		}
+		return sol;
 	}
 }
