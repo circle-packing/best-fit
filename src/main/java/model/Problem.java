@@ -40,7 +40,7 @@ public class Problem {
 		Solution sol = new Solution(circles.size());
 		Random rand = new Random();
 		for (Circle circle : circles) {
-			sol.add(circle, new Point(radius * rand.nextDouble(), radius * rand.nextDouble()));
+			sol.add(circle, new Vector2(radius * rand.nextDouble(), radius * rand.nextDouble()));
 		}
 		return sol;
 	}

@@ -1,15 +1,13 @@
 package gui;
 
-import model.Circle;
-import model.Point;
 import model.Problem;
 import model.Solution;
+import solvers.Solver;
+import solvers.bestfit.BestFitSolver;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Pablo on 21/11/15.
@@ -25,7 +23,7 @@ public class Main extends Frame {
 	public Main() {
 		super("Circle Packing");
 
-		makeRandomDrawer();
+		init();
 
 		setSize(800,600);
 		setVisible(true);
@@ -38,11 +36,16 @@ public class Main extends Frame {
 		});
 	}
 
-	private void makeRandomDrawer() {
+	public void init() {
 		int count = 10;
 		Problem problem = new Problem(count, -0.5);
-		Solution solution = problem.getRandomSolution(5);
-		drawer = new SolutionDrawer(solution, 25);
+
+		Solver solver = new BestFitSolver(problem);
+		solver.solve();
+
+		Solution solution = solver.getSolution();
+
+		drawer = new SolutionDrawer(solution, 50);
 	}
 
 	public void paint(Graphics g) {

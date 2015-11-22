@@ -8,17 +8,17 @@ import java.util.Map;
  */
 public class Solution {
 
-	Map<Circle, Point> locations;
+	Map<Circle, Vector2> locations;
 
 	public Solution(int totalCircles) {
 		this.locations = new HashMap<>(totalCircles);
 	}
 
-	public void add(Circle circle, Point point) {
-		locations.put(circle, point);
+	public void add(Circle circle, Vector2 position) {
+		locations.put(circle, position);
 	}
 
-	public Map<Circle, Point> getLocations() {
+	public Map<Circle, Vector2> getLocations() {
 		return locations;
 	}
 

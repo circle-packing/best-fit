@@ -3,12 +3,10 @@ package solvers;
 import com.joptimizer.functions.PDQuadraticMultivariateRealFunction;
 import com.joptimizer.optimizers.OptimizationRequest;
 import model.Circle;
-import model.Point;
+import model.Vector2;
 import model.Problem;
 import model.Solution;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -40,7 +38,7 @@ public class SimpleJOptimizeSolver extends Solver {
 		int n = getProblem().getCircles().size();
 		double[] uT = new double[2 * n + 1];
 		int i = 0;
-		for (Map.Entry<Circle, Point> circle : initial.getLocations().entrySet()) {
+		for (Map.Entry<Circle, Vector2> circle : initial.getLocations().entrySet()) {
 			uT[i] = circle.getValue().getX();
 			uT[n + i] = circle.getValue().getY();
 			++i;
