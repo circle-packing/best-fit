@@ -58,6 +58,14 @@ public class BestFitSolver extends Solver {
 		// Set solution
 		setSolution(solution);
 		// Check if solution is valid
-		System.out.println("Found valid solution: " + solution.isValid());
+		if (!solution.isValid()) {
+			System.out.println("Didn't find a valid solution. Some circles overlap.");
+		}
+		else if (solution.getLocations().size() != problem.getCircles().size()) {
+			System.out.println("The solution is valid, but doesn't include all circles.");
+		}
+		else {
+			System.out.println("Found valid solution.");
+		}
 	}
 }
