@@ -38,14 +38,24 @@ public class Main extends Frame {
 
 	public void init() {
 		int count = 10;
-		Problem problem = new Problem(count, -0.5);
+		Problem problem = new Problem(count, -1.5);
+		//Problem problem = new Problem(1, 1, 3, 1.5, 2, 0.2);
+		//Problem problem = new Problem(10, 2, 0.2);
 
 		Solver solver = new BestFitSolver(problem);
+
+		long startTime = System.nanoTime();
 		solver.solve();
+		long endTime = System.nanoTime();
+		long ns = (endTime - startTime);
+		long ms = (ns + 500000) / 1000000;
+		long s = (ms + 500) / 1000;
+
+		System.out.println(String.format("Solve time %d(s); %d(ms); %d(ns)", s, ms, ns ));
 
 		Solution solution = solver.getSolution();
 
-		drawer = new SolutionDrawer(solution, 50);
+		drawer = new SolutionDrawer(solution, 20);
 	}
 
 	public void paint(Graphics g) {
