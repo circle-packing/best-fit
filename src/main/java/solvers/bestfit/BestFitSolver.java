@@ -25,7 +25,6 @@ public class BestFitSolver extends Solver {
 		Problem problem = getProblem();
 		List<Circle> circles = problem.getCircles();
 		Solution solution = new Solution(circles.size());
-		setSolution(solution);
 
 		if (problem.getCircles().size() < 3) {
 			throw new IllegalStateException("Too little circles in this problem, need at least 3.");
@@ -53,5 +52,12 @@ public class BestFitSolver extends Solver {
 		Circle third = circles.get(2);
 		Vector2 thirdPos = mountThird.getMountPositionFor(third);
 		solution.add(third, thirdPos);
+
+
+
+		// Set solution
+		setSolution(solution);
+		// Check if solution is valid
+		System.out.println("Found valid solution: " + solution.isValid());
 	}
 }
