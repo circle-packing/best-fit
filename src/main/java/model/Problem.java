@@ -32,6 +32,13 @@ public class Problem {
 		}
 	}
 
+	public Problem(double... radii) {
+		circles = new ArrayList<>(radii.length);
+		for (int i = 0; i < radii.length; ++i) {
+			circles.add(new Circle(i+1, radii[i]));
+		}
+	}
+
 	public List<Circle> getCircles() {
 		return circles;
 	}
