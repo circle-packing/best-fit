@@ -32,4 +32,8 @@ public class Vector2 {
 	public Vector2 times(double num) {
 		return new Vector2(x * num, y * num);
 	}
+
+	public double distanceTo(Vector2 other) {
+		return Math.hypot(x - other.x, y - other.y);
+	}
 }
