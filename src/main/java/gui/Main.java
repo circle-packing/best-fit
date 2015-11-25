@@ -55,7 +55,7 @@ public class Main extends Frame {
 
 		Solution solution = solver.getSolution();
 
-		drawer = new SolutionDrawer(solution, 20);
+		drawer = new SolutionDrawer(solution, 200);
 	}
 
 	public void paint(Graphics g) {

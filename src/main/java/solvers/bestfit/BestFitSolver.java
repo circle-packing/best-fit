@@ -43,7 +43,7 @@ public class BestFitSolver extends Solver {
 
 		Vector2 firstPos = new Vector2(0, 0);
 		Vector2 secondPos = new Vector2(first.getRadius() + second.getRadius(), 0);
-
+		
 		solution.add(first, firstPos);
 		solution.add(second, secondPos);
 
@@ -53,6 +53,12 @@ public class BestFitSolver extends Solver {
 		Vector2 thirdPos = mountThird.getMountPositionFor(third);
 		solution.add(third, thirdPos);
 
+
+		// DEBUG
+		Hole testHole = new Hole(firstPos, secondPos, thirdPos, first, second, third);
+		Vector2 holePos = testHole.getCenter();
+		double holeSize = testHole.getSize();
+		solution.add(new Circle(1000, holeSize), holePos);
 
 
 		// Set solution
