@@ -7,9 +7,7 @@ import model.Problem;
 import model.Solution;
 import solvers.Solver;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Pablo on 22/11/15.
@@ -54,23 +52,68 @@ public class BestFitSolver extends Solver {
 		solution.add(third, thirdPos);
 
 		// TODO
-		// Create initial holes
-		// Create initial mountpoints
+		// Create initial holes, fill biggest holes first
+		Comparator<Hole> holeComparer = new Comparator<Hole>() {
+			@Override
+			public int compare(Hole o1, Hole o2) {
+				return Double.compare(o2.getSize(), o1.getSize());
+			}
+		};
+		PriorityQueue<Hole> holes = new PriorityQueue<>(circles.size(), holeComparer);
+		holes.add(new Hole(firstPos, secondPos, thirdPos, first, second, third));
+		// Create initial mountpoints, place in biggest mountpoints first
+		Comparator<SideMount> mountComparer = new Comparator<SideMount>() {
+			@Override
+			public int compare(SideMount o1, SideMount o2) {
+				return Double.compare(o2.getSize(), o1.getSize());
+			}
+		};
+		PriorityQueue<SideMount> mounts = new PriorityQueue<>(circles.size(), mountComparer);
 		// Do best-fit
+		List<Circle> circlesToPlace = new ArrayList<>(circles);
+		while(!circlesToPlace.isEmpty()) {
+			if(!holes.isEmpty()) {
+				Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
+				double size = toFill.getSize();
+				// IMPORTANT: circlesToPlace must be ordered big to small!
+				Circle bestFit = biggestNotLargerThan(size, circlesToPlace);
+
+				if (bestFit == null) { //none fit
+					continue; //just go on with the algo, this hole can't be filled
+				}
+
+				// place the best fit
+				Vector2 center = toFill.getCenter();
+				solution.add(bestFit, center);
+				//remember as already been placed
+				circlesToPlace.remove(bestFit);
+
+				//create new holes
+				holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
+			}
+			else if (!mounts.isEmpty()) {
+
+			}
+			else {
+				System.out.println("Something went wrong, there are circles, but nowhere to place them.");
+				break;
+			}
+		}
 
 
 		// Set solution
 		setSolution(solution);
 		// Check if solution is valid
 		System.out.println("Error/Total overlap: " + solution.calculateError());
-		if (!solution.isValid()) {
-			System.out.println("Didn't find a valid solution. Some circles overlap.");
+		System.out.println("Packed " + solution.getLocations().size() + " of " + problem.getCircles().size() + " circles.");
+	}
+
+	private Circle biggestNotLargerThan(double size, List<Circle> sortedBigToSmall) {
+		for (Circle cir : sortedBigToSmall) {
+			if (cir.getRadius() <= size) {
+				return cir;
+			}
 		}
-		else if (solution.getLocations().size() != problem.getCircles().size()) {
-			System.out.println("The solution is valid, but doesn't include all circles.");
-		}
-		else {
-			System.out.println("Found valid solution.");
-		}
+		return null;
 	}
 }

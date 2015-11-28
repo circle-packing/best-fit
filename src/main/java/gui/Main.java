@@ -37,10 +37,20 @@ public class Main extends Frame {
 	}
 
 	public void init() {
-		int count = 10;
-		Problem problem = new Problem(count, -1.5);
-		//Problem problem = new Problem(1, 1, 3, 1.5, 2, 0.2);
-		//Problem problem = new Problem(10, 2, 0.2);
+		int count = 100;
+		// Packomania problems
+		// These don't give very good results for now
+		//Problem problem = new Problem(count, 0);
+		//Problem problem = new Problem(count,  1.0/2.0);
+		//Problem problem = new Problem(count, -1.0/2.0);
+		//Problem problem = new Problem(count, -2.0/3.0);
+		//Problem problem = new Problem(count, -1.0/5.0);
+
+		// Problems more suited for this:
+		//Problem problem = new Problem(count,  -3.0/2.0);
+		//Problem problem = new Problem(count,  -1.1);
+		//Problem problem = new Problem(count,  -1.01);
+		Problem problem = new Problem(count,  -0.8);
 
 		Solver solver = new BestFitSolver(problem);
 
