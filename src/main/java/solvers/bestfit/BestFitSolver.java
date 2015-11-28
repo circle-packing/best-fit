@@ -60,10 +60,14 @@ public class BestFitSolver extends Solver {
 		double holeSize = testHole.getSize();
 		solution.add(new Circle(1000, holeSize), holePos);
 
+		System.out.println(holePos);
+		System.out.println(holeSize);
+
 
 		// Set solution
 		setSolution(solution);
 		// Check if solution is valid
+		System.out.println("Error/Total overlap: " + solution.calculateError());
 		if (!solution.isValid()) {
 			System.out.println("Didn't find a valid solution. Some circles overlap.");
 		}

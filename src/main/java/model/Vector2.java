@@ -36,4 +36,12 @@ public class Vector2 {
 	public double distanceTo(Vector2 other) {
 		return Math.hypot(x - other.x, y - other.y);
 	}
+
+	@Override
+	public String toString() {
+		return "Vector2{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
 }
