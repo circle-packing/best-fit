@@ -53,15 +53,10 @@ public class BestFitSolver extends Solver {
 		Vector2 thirdPos = mountThird.getMountPositionFor(third);
 		solution.add(third, thirdPos);
 
-
-		// DEBUG
-		Hole testHole = new Hole(firstPos, secondPos, thirdPos, first, second, third);
-		Vector2 holePos = testHole.getCenter();
-		double holeSize = testHole.getSize();
-		solution.add(new Circle(1000, holeSize), holePos);
-
-		System.out.println(holePos);
-		System.out.println(holeSize);
+		// TODO
+		// Create initial holes
+		// Create initial mountpoints
+		// Do best-fit
 
 
 		// Set solution
