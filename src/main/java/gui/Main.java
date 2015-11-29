@@ -8,7 +8,6 @@ import solvers.bestfit.BestFitSolver;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 /**
  * Created by Pablo on 21/11/15.
@@ -43,10 +42,13 @@ public class Main {
 		//Problem problem = new Problem(count, -1.0/5.0);
 
 		// Problems more suited for this:
-		//Problem problem = new Problem(count,  -3.0/2.0);
+		//Problem problem = new Problem(count,  -1.5);
 		//Problem problem = new Problem(count,  -1.1);
 		//Problem problem = new Problem(count,  -1.01);
-		Problem problem = new Problem(count,  -0.8);
+		//Problem problem = new Problem(count,  -1);
+		//Problem problem = new Problem(count,  -0.8);
+		Problem problem = new Problem(count,  -0.7);
+		//Problem problem = new Problem(count,  -0.6);
 
 		Solver solver = new BestFitSolver(problem);
 
