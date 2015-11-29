@@ -96,6 +96,17 @@ public class BestFitSolver extends Solver {
 		}
 	}
 
+	/**
+	 * Do a single step in the best-fit algorithm.
+	 * A step can be several things:
+	 * 1) Fitting a circle into a hole, this removes a hole, creates 3 new holes, and removes a circle from circlesToPack.
+	 * 2) Trying to fill a hole, but no circle is found. This removes that hole.
+	 * 3) Placing a circle in a mount-point. This removes a mount, creates some new ones and removes a circle from circlesToPack.
+	 *
+	 * If no next step is possible something went wrong (incomplete or buggy implementation).
+	 * 
+	 * @return Whether a step was possible.
+	 */
 	private boolean bestFitStep() {
 		if(!holes.isEmpty()) {
 			Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
