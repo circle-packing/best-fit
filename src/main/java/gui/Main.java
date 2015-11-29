@@ -32,18 +32,18 @@ public class Main {
 	}
 
 	private static Solution solve() {
-		int count = 1000;
+		int count = 10;
 		// Packomania problems
 		// These don't give very good results for now
 		//Problem problem = new Problem(count, 0);
 		//Problem problem = new Problem(count,  1.0/2.0);
 		//Problem problem = new Problem(count, -1.0/2.0);
 		//Problem problem = new Problem(count, -2.0/3.0);
-		//Problem problem = new Problem(count, -1.0/5.0);
+		Problem problem = new Problem(count, -1.0/5.0);
 
 		// Problems more suited for this:
 		//Problem problem = new Problem(count,  -1.5);
-		Problem problem = new Problem(count,  -1.1);
+		//Problem problem = new Problem(count,  -1.1);
 		//Problem problem = new Problem(count,  -1.01);
 		//Problem problem = new Problem(count,  -1);
 		//Problem problem = new Problem(count,  -0.95);
