@@ -76,4 +76,20 @@ public class SideMount {
 
 		return new Vector2(x2 - rx, y2 - ry);
 	}
+
+	public Vector2 getPosFirst() {
+		return posFirst;
+	}
+
+	public Vector2 getPosSecond() {
+		return posSecond;
+	}
+
+	public Circle getCirFirst() {
+		return cirFirst;
+	}
+
+	public Circle getCirSecond() {
+		return cirSecond;
+	}
 }

@@ -85,7 +85,10 @@ public class BestFitSolver extends Solver {
 		// Create first hole
 		holes.add(new Hole(firstPos, secondPos, thirdPos, first, second, third));
 		// Create first mount points
-		// TODO
+		// IMPORTANT: side-mounts must be clock-wise
+		mounts.add(new SideMount(firstPos, thirdPos, first, third));
+		mounts.add(new SideMount(thirdPos, secondPos, third, second));
+		mounts.add(new SideMount(secondPos, firstPos, second, first));
 	}
 
 	private void doBestFit() {
@@ -128,7 +131,22 @@ public class BestFitSolver extends Solver {
 			holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
 		}
 		else if (!mounts.isEmpty()) {
+			SideMount mount = mounts.remove();
+			Circle cir = circlesToPack.get(0);
+			circlesToPack.remove(0);
 
+			Vector2 pos = mount.getMountPositionFor(cir);
+			getSolution().add(cir, pos);
+
+			Vector2 posFirst = mount.getPosFirst();
+			Vector2 posSecond = mount.getPosSecond();
+			Circle first = mount.getCirFirst();
+			Circle second = mount.getCirSecond();
+			// TODO add new hole
+			holes.add(new Hole(posFirst, posSecond, pos, first, second, cir));
+			// TODO add new mounts
+			mounts.add(new SideMount(posFirst, pos, first, cir));
+			mounts.add(new SideMount(pos, posSecond, cir, second));
 		}
 		else {
 			System.out.println("Something went wrong, there are circles, but nowhere to place them.");
