@@ -91,33 +91,40 @@ public class BestFitSolver extends Solver {
 	private void doBestFit() {
 		// Do best-fit
 		while(!circlesToPack.isEmpty()) {
-			if(!holes.isEmpty()) {
-				Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
-				double size = toFill.getSize();
-				// IMPORTANT: circlesToPlace must be ordered big to small!
-				Circle bestFit = biggestNotLargerThan(size, circlesToPack);
-
-				if (bestFit == null) { //none fit
-					continue; //just go on with the algo, this hole can't be filled
-				}
-
-				// place the best fit
-				Vector2 center = toFill.getCenter();
-				getSolution().add(bestFit, center);
-				//remember as already been placed
-				circlesToPack.remove(bestFit);
-
-				//create new holes
-				holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
-			}
-			else if (!mounts.isEmpty()) {
-
-			}
-			else {
-				System.out.println("Something went wrong, there are circles, but nowhere to place them.");
-				break;
-			}
+			boolean ok = bestFitStep();
+			if (!ok) break;
 		}
+	}
+
+	private boolean bestFitStep() {
+		if(!holes.isEmpty()) {
+			Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
+			double size = toFill.getSize();
+			// IMPORTANT: circlesToPlace must be ordered big to small!
+			Circle bestFit = biggestNotLargerThan(size, circlesToPack);
+
+			if (bestFit == null) { //none fit
+				return true; //just go on with the algo, this hole can't be filled
+			}
+
+			// place the best fit
+			Vector2 center = toFill.getCenter();
+			getSolution().add(bestFit, center);
+			//remember as already been placed
+			circlesToPack.remove(bestFit);
+
+			//create new holes
+			holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
+		}
+		else if (!mounts.isEmpty()) {
+
+		}
+		else {
+			System.out.println("Something went wrong, there are circles, but nowhere to place them.");
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
