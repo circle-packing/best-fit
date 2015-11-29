@@ -2,41 +2,37 @@ package gui;
 
 import model.Problem;
 import model.Solution;
+import model.Vector2;
 import solvers.Solver;
 import solvers.bestfit.BestFitSolver;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 /**
  * Created by Pablo on 21/11/15.
  */
-public class Main extends Frame {
-
-	private SolutionDrawer drawer;
+public class Main {
 
 	public static void main(String args[]) {
-		new Main();
-	}
 
-	public Main() {
-		super("Circle Packing");
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				JFrame frame = new JFrame("Circle Packing");
+				frame.setSize(800, 600);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		init();
+				SolutionDrawer drawer = new SolutionDrawer(solve());
+				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
+				frame.getContentPane().add(drawer);
 
-		setSize(800,600);
-		setVisible(true);
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				dispose();
-				System.exit(0);
+				frame.setVisible(true);
 			}
 		});
 	}
 
-	public void init() {
+	private static Solution solve() {
 		int count = 100;
 		// Packomania problems
 		// These don't give very good results for now
@@ -63,17 +59,7 @@ public class Main extends Frame {
 
 		System.out.println(String.format("Solve time %d(s); %d(ms); %d(ns)", s, ms, ns ));
 
-		Solution solution = solver.getSolution();
-
-		drawer = new SolutionDrawer(solution, 200);
+		return solver.getSolution();
 	}
 
-	public void paint(Graphics g) {
-		g.translate(getSize().width / 2, getSize().height / 2);
-		if (drawer != null) {
-			drawer.draw(g);
-		} else {
-			System.out.println("No drawer :(");
-		}
-	}
 }
