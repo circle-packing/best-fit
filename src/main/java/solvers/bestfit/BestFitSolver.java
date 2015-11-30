@@ -160,7 +160,7 @@ public class BestFitSolver extends Solver {
 			Location loc = new Location(pos, cir);
 
 			// Check for overlap
-			int prevIndex = Math.abs((firstIndex-1) % shell.size());
+			int prevIndex = (firstIndex+shell.size()-1) % shell.size();
 			Location prev = shell.get(prevIndex);
 			if (loc.overlaps(prev)) {
 				System.out.println("Tried mounting circle, but overlap with previous.");
