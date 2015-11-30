@@ -154,19 +154,19 @@ public class BestFitSolver extends Solver {
 			int prevIndex = Math.abs((firstIndex-1) % shell.size());
 			Location prev = shell.get(prevIndex);
 			if (loc.overlaps(prev)) {
-				shell.remove(prevIndex);
+				shell.remove(first);
 				return true;
 			}
 
 			int nextIndex = (secondIndex+1) % shell.size();
 			Location next = shell.get(nextIndex);
 			if (loc.overlaps(next)) {
-				shell.remove(nextIndex);
+				shell.remove(second);
 				return true;
 			}
 
 			// Everything went well, no overlaps and such
-			circlesToPack.remove(0);
+			circlesToPack.remove(cir);
 			getSolution().add(cir, pos);
 
 			// TODO add new hole
