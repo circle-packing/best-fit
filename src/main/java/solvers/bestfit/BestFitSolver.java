@@ -1,12 +1,12 @@
 package solvers.bestfit;
 
 import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.localization.Localizable;
 import model.*;
 import solvers.Solver;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
@@ -230,6 +230,7 @@ public class BestFitSolver extends Solver {
 	public void drawState(Graphics2D g2) {
 		g2.setColor(new Color(0,0,0, 100));
 
+		// Draw circles
 		for (Location location : getSolution().getLocations()) {
 			double r = location.getCircle().getRadius();
 			Vector2 p = location.getPosition();
@@ -241,5 +242,15 @@ public class BestFitSolver extends Solver {
 			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, r*2.0, r*2.0);
 			g2.fill(circle);
 		}
+
+		// Draw shell
+		GeneralPath shellLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, shell.size());
+		Location last = shell.get(shell.size()-1);
+		shellLine.moveTo(last.getPosition().getX(), last.getPosition().getY());
+		for (Location loc : shell) {
+			shellLine.lineTo(loc.getPosition().getX(), loc.getPosition().getY());
+		}
+		g2.setStroke(new BasicStroke(0.1f));
+		g2.draw(shellLine);
 	}
 }
