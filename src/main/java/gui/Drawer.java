@@ -20,7 +20,7 @@ public class Drawer extends JPanel implements MouseListener, MouseMotionListener
 		super();
 
 		this.offset = new Vector2(0, 0);
-		this.scale = 25;
+		this.scale = 50;
 
 		addMouseListener(this);
 		addMouseWheelListener(this);
