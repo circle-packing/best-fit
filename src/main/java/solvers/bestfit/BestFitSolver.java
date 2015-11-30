@@ -1,10 +1,8 @@
 package solvers.bestfit;
 
 import com.sun.istack.internal.NotNull;
-import model.Circle;
-import model.Vector2;
-import model.Problem;
-import model.Solution;
+import com.sun.istack.internal.localization.Localizable;
+import model.*;
 import solvers.Solver;
 
 import java.util.*;
@@ -24,13 +22,7 @@ public class BestFitSolver extends Solver {
 	};
 	private PriorityQueue<Hole> holes;
 
-	static private Comparator<SideMount> mountComparer = new Comparator<SideMount>() {
-		@Override
-		public int compare(SideMount o1, SideMount o2) {
-			return Double.compare(o2.getSize(), o1.getSize());
-		}
-	};
-	private PriorityQueue<SideMount> mounts;
+	private List<Location> shell;
 
 
 	public BestFitSolver(@NotNull Problem problem) {
@@ -58,7 +50,8 @@ public class BestFitSolver extends Solver {
 
 		// Collections
 		holes = new PriorityQueue<>(circlesToPack.size(), holeComparer);
-		mounts = new PriorityQueue<>(circlesToPack.size(), mountComparer);
+		//mounts = new PriorityQueue<>(circlesToPack.size(), mountComparer);
+		shell = new ArrayList<>(circlesToPack.size());
 	}
 
 	private void packFirstThree() {
@@ -84,11 +77,11 @@ public class BestFitSolver extends Solver {
 
 		// Create first hole
 		holes.add(new Hole(firstPos, secondPos, thirdPos, first, second, third));
-		// Create first mount points
-		// IMPORTANT: side-mounts must be clock-wise
-		mounts.add(new SideMount(firstPos, thirdPos, first, third));
-		mounts.add(new SideMount(thirdPos, secondPos, third, second));
-		mounts.add(new SideMount(secondPos, firstPos, second, first));
+		// Create the initial shell
+		// IMPORTANT: must be clock-wise
+		shell.add(new Location(firstPos, first));
+		shell.add(new Location(thirdPos, third));
+		shell.add(new Location(secondPos, second));
 	}
 
 	private void doBestFit() {
@@ -130,23 +123,55 @@ public class BestFitSolver extends Solver {
 			//create new holes
 			holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
 		}
-		else if (!mounts.isEmpty()) {
-			SideMount mount = mounts.remove();
-			Circle cir = circlesToPack.get(0);
-			circlesToPack.remove(0);
+		else if (!shell.isEmpty()) {
+			// Find biggest mount on the shell
+			Location first = null;
+			Location second = null;
+			int firstIndex = 0;
+			int secondIndex = 0;
+			double biggest = 0;
+			for(int i = 0; i < shell.size(); ++i) {
+				int j = (i+1) % shell.size();
+				Location f = shell.get(i);
+				Location s = shell.get(j);
+				double size = f.getPosition().distanceTo(s.getPosition());
+				if (size > biggest) {
+					biggest = size;
+					first = f;
+					second = s;
+					firstIndex = i;
+					secondIndex = j;
+				}
+			}
+			// Choose circle to pack
+			Circle cir = circlesToPack.get(0); //The biggest one, since circlesToPack is ordered
 
-			Vector2 pos = mount.getMountPositionFor(cir);
+			// Calculate position for the circle
+			Vector2 pos = SideMount.getMountPositionFor(cir, first, second);
+			Location loc = new Location(pos, cir);
+
+			// Check for overlap
+			int prevIndex = Math.abs((firstIndex-1) % shell.size());
+			Location prev = shell.get(prevIndex);
+			if (loc.overlaps(prev)) {
+				shell.remove(prevIndex);
+				return true;
+			}
+
+			int nextIndex = (secondIndex+1) % shell.size();
+			Location next = shell.get(nextIndex);
+			if (loc.overlaps(next)) {
+				shell.remove(nextIndex);
+				return true;
+			}
+
+			// Everything went well, no overlaps and such
+			circlesToPack.remove(0);
 			getSolution().add(cir, pos);
 
-			Vector2 posFirst = mount.getPosFirst();
-			Vector2 posSecond = mount.getPosSecond();
-			Circle first = mount.getCirFirst();
-			Circle second = mount.getCirSecond();
 			// TODO add new hole
-			holes.add(new Hole(posFirst, posSecond, pos, first, second, cir));
-			// TODO add new mounts
-			mounts.add(new SideMount(posFirst, pos, first, cir));
-			mounts.add(new SideMount(pos, posSecond, cir, second));
+			// Extend shell
+			shell.add(secondIndex, loc);
 		}
 		else {
 			System.out.println("Something went wrong, there are circles, but nowhere to place them.");

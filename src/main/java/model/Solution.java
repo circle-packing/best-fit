@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,28 +10,30 @@ import java.util.Map;
  */
 public class Solution {
 
-	Map<Circle, Vector2> locations;
+	List<Location> locations;
 
 	public Solution(int totalCircles) {
-		this.locations = new HashMap<>(totalCircles);
+		this.locations = new ArrayList<>(totalCircles);
 	}
 
 	public void add(Circle circle, Vector2 position) {
-		locations.put(circle, position);
+		locations.add(new Location(position, circle));
 	}
 
-	public Map<Circle, Vector2> getLocations() {
+	public void add(Location loc) { locations.add(loc); }
+
+	public List<Location> getLocations() {
 		return locations;
 	}
 
 	public double calculateError() {
 		double error = 0;
-		for (Map.Entry<Circle, Vector2> first : locations.entrySet()) {
-			Vector2 firstPos = first.getValue();
-			double firstRad = first.getKey().getRadius();
-			for (Map.Entry<Circle, Vector2> second : locations.entrySet()) {
-				Vector2 secondPos = second.getValue();
-				double secondRad = second.getKey().getRadius();
+		for (Location first : locations) {
+			Vector2 firstPos = first.getPosition();
+			double firstRad = first.getCircle().getRadius();
+			for (Location second : locations) {
+				Vector2 secondPos = second.getPosition();
+				double secondRad = second.getCircle().getRadius();
 
 				if (first != second) {
 					double diff = firstPos.distanceTo(secondPos) - (firstRad + secondRad);

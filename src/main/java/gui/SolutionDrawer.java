@@ -40,9 +40,9 @@ public class SolutionDrawer extends JPanel implements MouseListener, MouseMotion
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		for (Map.Entry<Circle, Vector2> location : solution.getLocations().entrySet()) {
-			int r = (int)Math.round(scale * location.getKey().getRadius());
-			Vector2 p = location.getValue();
+		for (Location location : solution.getLocations()) {
+			int r = (int)Math.round(scale * location.getCircle().getRadius());
+			Vector2 p = location.getPosition();
 			int x = (int)Math.round(scale * p.getX() + offset.getX());
 			x = x - r;
 			int y = (int)Math.round(scale * p.getY() + offset.getY());
