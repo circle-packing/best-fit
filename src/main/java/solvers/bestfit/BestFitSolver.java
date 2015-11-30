@@ -5,7 +5,10 @@ import com.sun.istack.internal.localization.Localizable;
 import model.*;
 import solvers.Solver;
 
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by Pablo on 22/11/15.
@@ -104,6 +107,11 @@ public class BestFitSolver extends Solver {
 	 * @return Whether a step was possible.
 	 */
 	private boolean bestFitStep() {
+		if (circlesToPack.isEmpty()) {
+			System.out.println("No more circles to place.");
+			return false;
+		}
+
 		if(!holes.isEmpty()) {
 			Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
 			double size = toFill.getSize();
@@ -111,6 +119,7 @@ public class BestFitSolver extends Solver {
 			Circle bestFit = biggestNotLargerThan(size, circlesToPack);
 
 			if (bestFit == null) { //none fit
+				System.out.println("Tried to fill a hole, but no circle is small enough.");
 				return true; //just go on with the algo, this hole can't be filled
 			}
 
@@ -154,6 +163,7 @@ public class BestFitSolver extends Solver {
 			int prevIndex = Math.abs((firstIndex-1) % shell.size());
 			Location prev = shell.get(prevIndex);
 			if (loc.overlaps(prev)) {
+				System.out.println("Tried mounting circle, but overlap with previous.");
 				shell.remove(first);
 				return true;
 			}
@@ -161,6 +171,7 @@ public class BestFitSolver extends Solver {
 			int nextIndex = (secondIndex+1) % shell.size();
 			Location next = shell.get(nextIndex);
 			if (loc.overlaps(next)) {
+				System.out.println("Tried mounting circle, but overlap with next.");
 				shell.remove(second);
 				return true;
 			}
@@ -195,6 +206,18 @@ public class BestFitSolver extends Solver {
 		System.out.println("" + circlesToPack.size() + " still need to be packed.");
 	}
 
+	public void startStepSolve() {
+		init();
+
+		packFirstThree();
+
+		bestFitStep();
+	}
+
+	public boolean doStepSolve() {
+		return bestFitStep();
+	}
+
 	private Circle biggestNotLargerThan(double size, List<Circle> sortedBigToSmall) {
 		for (Circle cir : sortedBigToSmall) {
 			if (cir.getRadius() <= size) {
@@ -202,5 +225,21 @@ public class BestFitSolver extends Solver {
 			}
 		}
 		return null;
+	}
+
+	public void drawState(Graphics2D g2) {
+		g2.setColor(new Color(0,0,0, 100));
+
+		for (Location location : getSolution().getLocations()) {
+			double r = location.getCircle().getRadius();
+			Vector2 p = location.getPosition();
+			double x = p.getX();
+			x = x - r;
+			double y = p.getY();
+			y = y - r;
+
+			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, r*2.0, r*2.0);
+			g2.fill(circle);
+		}
 	}
 }

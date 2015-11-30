@@ -22,8 +22,10 @@ public class Main {
 				frame.setSize(800, 600);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-				SolutionDrawer drawer = new SolutionDrawer(solve());
+				//Drawer drawer = new SolutionDrawer(getSolution());
+				Drawer drawer = new StepSolverDrawer(getStepSolver());
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
+
 				frame.getContentPane().add(drawer);
 
 				frame.setVisible(true);
@@ -31,7 +33,26 @@ public class Main {
 		});
 	}
 
-	private static Solution solve() {
+	private static Solution getSolution() {
+		Solver solver = new BestFitSolver(getProblem());
+
+		long startTime = System.nanoTime();
+		solver.solve();
+		long endTime = System.nanoTime();
+		long ns = (endTime - startTime);
+		long ms = (ns + 500000) / 1000000;
+		long s = (ms + 500) / 1000;
+
+		System.out.println(String.format("Solve time %d(s); %d(ms); %d(ns)", s, ms, ns ));
+
+		return solver.getSolution();
+	}
+
+	private static BestFitSolver getStepSolver() {
+		return new BestFitSolver(getProblem());
+	}
+
+	private static Problem getProblem() {
 		int count = 10;
 		// Packomania problems
 		// These don't give very good results for now
@@ -54,18 +75,7 @@ public class Main {
 		//Problem problem = new Problem(count,  -0.7);
 		//Problem problem = new Problem(count,  -0.6);
 
-		Solver solver = new BestFitSolver(problem);
-
-		long startTime = System.nanoTime();
-		solver.solve();
-		long endTime = System.nanoTime();
-		long ns = (endTime - startTime);
-		long ms = (ns + 500000) / 1000000;
-		long s = (ms + 500) / 1000;
-
-		System.out.println(String.format("Solve time %d(s); %d(ms); %d(ns)", s, ms, ns ));
-
-		return solver.getSolution();
+		return problem;
 	}
 
 }
