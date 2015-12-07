@@ -47,8 +47,7 @@ public class BestFitSolver extends Solver {
 		setSolution(new Solution(circlesToPack.size()));
 
 		// Collections
-		holes = new LinkedBlockingQueue<>();
-		//mounts = new PriorityQueue<>(circlesToPack.size(), mountComparer);
+		holes = new LinkedBlockingQueue<>(/*circlesToPack.size()*/);
 		shell = new ArrayList<>(circlesToPack.size());
 	}
 
