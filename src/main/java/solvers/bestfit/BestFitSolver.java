@@ -294,7 +294,7 @@ public class BestFitSolver extends Solver {
 
 		// Draw holes
 		g2.setColor(new Color(255,0,0, 80));
-		g2.setStroke(new BasicStroke(0.01f));
+		g2.setStroke(new BasicStroke((float)(1.0 / g2.getTransform().getScaleX())));
 		for (NHole hole : holes) {
 			List<Location> locs = hole.getLocations();
 

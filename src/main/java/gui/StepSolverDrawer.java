@@ -38,6 +38,9 @@ public class StepSolverDrawer extends Drawer implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			doSteps(1);
 		}
+		if (e.getKeyCode() == KeyEvent.VK_R) {
+			solver.report();
+		}
 	}
 
 	@Override

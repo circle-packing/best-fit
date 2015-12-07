@@ -22,9 +22,9 @@ public class Main {
 				frame.setSize(800, 600);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-				Drawer drawer = new SolutionDrawer(getSolution());
-				//StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				//drawer.doSteps(1870);
+				//Drawer drawer = new SolutionDrawer(getSolution());
+				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
+				drawer.doSteps(170);
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -55,20 +55,19 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 1000;
+		int count = 300;
 		// Packomania problems
-		// These don't give very good results for now
 		//Problem problem = new Problem(count, 0);
 		//Problem problem = new Problem(count,  1.0/2.0);
 		//Problem problem = new Problem(count, -1.0/2.0);
-		//Problem problem = new Problem(count, -2.0/3.0);
-		Problem problem = new Problem(count, -1.0/5.0);
+		//Problem problem = new Problem(count, -2.0/3.0); //not great packing, due to packing to 0,0. Beautiful though
+		//Problem problem = new Problem(count, -1.0/5.0);
 
 		// Problems more suited for this:
-		//Problem problem = new Problem(count,  -1.5);
+		//Problem problem = new Problem(count,  -1.5); //1000 NaN Problem
 		//Problem problem = new Problem(count,  -1.1);
 		//Problem problem = new Problem(count,  -1.01);
-		//Problem problem = new Problem(count,  -1);
+		Problem problem = new Problem(count,  -1); //300 NaN Problem, Ok at 250. Just after 170 steps overlap
 		//Problem problem = new Problem(count,  -0.95);
 		//Problem problem = new Problem(count,  -0.9);
 		//Problem problem = new Problem(count,  -0.85);
