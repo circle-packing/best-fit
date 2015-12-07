@@ -27,4 +27,12 @@ public class Location {
 	public boolean overlaps(Location other) {
 		return (circle.getRadius() + other.circle.getRadius()) > position.distanceTo(other.position);
 	}
+
+	@Override
+	public String toString() {
+		return "Location{" +
+				"position=" + position +
+				", circle=" + circle +
+				'}';
+	}
 }

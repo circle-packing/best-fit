@@ -9,6 +9,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Pablo on 22/11/15.
@@ -17,16 +19,9 @@ public class BestFitSolver extends Solver {
 
 	private List<Circle> circlesToPack; //The remaining circles to pack, for all see the Problem
 
-	static private Comparator<Hole> holeComparer = new Comparator<Hole>() {
-		@Override
-		public int compare(Hole o1, Hole o2) {
-			return Double.compare(o2.getSize(), o1.getSize());
-		}
-	};
-	private PriorityQueue<Hole> holes;
+	private Queue<NHole> holes;
 
 	private List<Location> shell;
-
 
 	public BestFitSolver(@NotNull Problem problem) {
 		super(problem);
@@ -52,7 +47,7 @@ public class BestFitSolver extends Solver {
 		setSolution(new Solution(circlesToPack.size()));
 
 		// Collections
-		holes = new PriorityQueue<>(circlesToPack.size(), holeComparer);
+		holes = new LinkedBlockingQueue<>();
 		//mounts = new PriorityQueue<>(circlesToPack.size(), mountComparer);
 		shell = new ArrayList<>(circlesToPack.size());
 	}
@@ -82,7 +77,7 @@ public class BestFitSolver extends Solver {
 		circlesToPack.remove(third);
 
 		// Create first hole
-		holes.add(new Hole(firstPos, secondPos, thirdPos, first, second, third));
+		holes.add(new NHole(firstLoc, secondLoc, thirdLoc));
 		// Create the initial shell
 		// IMPORTANT: must be clock-wise
 		shell.add(firstLoc);
@@ -116,10 +111,9 @@ public class BestFitSolver extends Solver {
 		}
 
 		if(!holes.isEmpty()) {
-			Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
-			double size = toFill.getSize();
+			NHole toFill = holes.remove(); //removes the hole, so remembers we already handled it
 			// IMPORTANT: circlesToPlace must be ordered big to small!
-			Circle bestFit = biggestNotLargerThan(size, circlesToPack);
+			Location bestFit = findBestFitFor(toFill, circlesToPack);
 
 			if (bestFit == null) { //none fit
 				System.out.println("Tried to fill a hole, but no circle is small enough.");
@@ -127,16 +121,18 @@ public class BestFitSolver extends Solver {
 			}
 
 			// place the best fit
-			Vector2 center = toFill.getCenter();
-			getSolution().add(bestFit, center);
+			getSolution().add(bestFit);
 
-			System.out.println("Packing in hole: " + bestFit + ", at " + center);
+			System.out.println("Packing in hole: " + bestFit);
 
 			//remember as already been placed
-			circlesToPack.remove(bestFit);
+			circlesToPack.remove(bestFit.getCircle());
 
 			//create new holes
-			holes.addAll(toFill.getHolesWhenFilledWith(bestFit, center, size));
+			for (int i = 0; i < toFill.getLocations().size(); ++i) {
+				int j = (i+1)%toFill.getLocations().size();
+				holes.add(new NHole(toFill.getLocations().get(i), toFill.getLocations().get(j), bestFit));
+			}
 		}
 		else if (!shell.isEmpty()) {
 			// Find biggest mount on the shell
@@ -188,7 +184,7 @@ public class BestFitSolver extends Solver {
 			getSolution().add(cir, pos);
 
 			// TODO add new hole
-			holes.add(new Hole(first.getPosition(), second.getPosition(), loc.getPosition(), first.getCircle(), second.getCircle(), loc.getCircle()));
+			holes.add(new NHole(first, second, loc));
 			// Extend shell
 			shell.add(secondIndex, loc);
 		}
@@ -230,6 +226,16 @@ public class BestFitSolver extends Solver {
 		for (Circle cir : sortedBigToSmall) {
 			if (cir.getRadius() <= size) {
 				return cir;
+			}
+		}
+		return null;
+	}
+
+	private Location findBestFitFor(NHole hole, List<Circle> sortedBigToSmall) {
+		for (Circle cir : sortedBigToSmall) {
+			Vector2 pos = hole.tryFit(cir);
+			if (pos != null) {
+				return new Location(pos, cir);
 			}
 		}
 		return null;
