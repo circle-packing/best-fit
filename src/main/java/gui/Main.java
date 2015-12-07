@@ -24,7 +24,7 @@ public class Main {
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
 				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				drawer.doSteps(170);
+				drawer.doSteps(445);
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -55,11 +55,11 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 300;
+		int count = 1050;
 		// Packomania problems
 		//Problem problem = new Problem(count, 0);
 		//Problem problem = new Problem(count,  1.0/2.0);
-		//Problem problem = new Problem(count, -1.0/2.0);
+		Problem problem = new Problem(count, -1.0/2.0); // 1050 NaN problem, 1040 is fine. Overlap 3 after 445 steps (look at top-right)
 		//Problem problem = new Problem(count, -2.0/3.0); //not great packing, due to packing to 0,0. Beautiful though
 		//Problem problem = new Problem(count, -1.0/5.0);
 
@@ -67,7 +67,7 @@ public class Main {
 		//Problem problem = new Problem(count,  -1.5); //1000 NaN Problem
 		//Problem problem = new Problem(count,  -1.1);
 		//Problem problem = new Problem(count,  -1.01);
-		Problem problem = new Problem(count,  -1); //300 NaN Problem, Ok at 250. Just after 170 steps overlap
+		//Problem problem = new Problem(count,  -1); //300 NaN Problem, Ok at 250. Just after 170 steps overlap
 		//Problem problem = new Problem(count,  -0.95);
 		//Problem problem = new Problem(count,  -0.9);
 		//Problem problem = new Problem(count,  -0.85);
