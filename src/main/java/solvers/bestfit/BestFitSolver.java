@@ -2,11 +2,14 @@ package solvers.bestfit;
 
 import com.sun.istack.internal.NotNull;
 import model.*;
+import org.apache.commons.math3.stat.descriptive.moment.VectorialCovariance;
 import solvers.Solver;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -129,7 +132,7 @@ public class BestFitSolver extends Solver {
 			//create new holes
 			for (int i = 0; i < toFill.getLocations().size(); ++i) {
 				int j = (i+1)%toFill.getLocations().size();
-				holes.add(new NHole(toFill.getLocations().get(i), toFill.getLocations().get(j), bestFit));
+				holes.add(new NHole(bestFit, toFill.getLocations().get(i), toFill.getLocations().get(j)));
 			}
 		}
 		else if (!shell.isEmpty()) {
@@ -165,21 +168,45 @@ public class BestFitSolver extends Solver {
 			Location prev = shell.get(prevIndex);
 			if (loc.overlaps(prev)) {
 				System.out.println("Tried mounting circle, but overlap with previous.");
-				shell.remove(first);
+				NHole temp = new NHole(first, second, prev);
+				Location tempLoc = findBestFitFor(temp, circlesToPack);
+				if (tempLoc != null) {
+					shell.set(firstIndex, tempLoc);
+					circlesToPack.remove(tempLoc.getCircle());
+					System.out.println("Instead packed " + tempLoc);
+					getSolution().add(tempLoc);
+					// TODO Create holes
+				}
+				else {
+					System.out.println("And couldn't find one that does fit.");
+					shell.remove(firstIndex);
+				}
 				return true;
 			}
 
 			int nextIndex = (secondIndex+1) % shell.size();
 			Location next = shell.get(nextIndex);
 			if (loc.overlaps(next)) {
-				System.out.println("Tried mounting circle, but overlap with next.");
-				shell.remove(second);
+				System.out.println("Tried mounting circle, but overlap with previous.");
+				NHole temp = new NHole(first, second, next);
+				Location tempLoc = findBestFitFor(temp, circlesToPack);
+				if (tempLoc != null) {
+					shell.set(secondIndex, tempLoc);
+					circlesToPack.remove(tempLoc.getCircle());
+					System.out.println("Instead packed " + tempLoc);
+					getSolution().add(tempLoc);
+					// TODO Create holes
+				}
+				else {
+					System.out.println("And couldn't find one that does fit.");
+					shell.remove(secondIndex);
+				}
 				return true;
 			}
 
 			// Everything went well, no overlaps and such
 			circlesToPack.remove(cir);
-			getSolution().add(cir, pos);
+			getSolution().add(loc);
 
 			// TODO add new hole
 			holes.add(new NHole(first, second, loc));
@@ -213,20 +240,11 @@ public class BestFitSolver extends Solver {
 
 		packFirstThree();
 
-		bestFitStep();
+		//bestFitStep();
 	}
 
 	public boolean doStepSolve() {
 		return bestFitStep();
-	}
-
-	private Circle biggestNotLargerThan(double size, List<Circle> sortedBigToSmall) {
-		for (Circle cir : sortedBigToSmall) {
-			if (cir.getRadius() <= size) {
-				return cir;
-			}
-		}
-		return null;
 	}
 
 	private Location findBestFitFor(NHole hole, List<Circle> sortedBigToSmall) {
@@ -240,9 +258,9 @@ public class BestFitSolver extends Solver {
 	}
 
 	public void drawState(Graphics2D g2) {
-		g2.setColor(new Color(0,0,0, 100));
 
 		// Draw circles
+		g2.setColor(new Color(0,0, 255, 100));
 		for (Location location : getSolution().getLocations()) {
 			double r = location.getCircle().getRadius();
 			Vector2 p = location.getPosition();
@@ -256,17 +274,58 @@ public class BestFitSolver extends Solver {
 		}
 
 		// Draw shell
-		GeneralPath shellLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, shell.size());
-		Location last = shell.get(shell.size()-1);
-		shellLine.moveTo(last.getPosition().getX(), last.getPosition().getY());
-		for (Location loc : shell) {
-			double x = loc.getPosition().getX();
-			double y = loc.getPosition().getY();
-			if (Double.isNaN(x)) x = 0;
-			if (Double.isNaN(y)) y = 0;
-			shellLine.lineTo(x, y);
+		g2.setColor(new Color(0, 150, 255, 100));
+		{
+			GeneralPath shellLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, shell.size());
+			Location last = shell.get(shell.size() - 1);
+			shellLine.moveTo(last.getPosition().getX(), last.getPosition().getY());
+			for (Location loc : shell) {
+				double x = loc.getPosition().getX();
+				double y = loc.getPosition().getY();
+				if (Double.isNaN(x)) x = 0;
+				if (Double.isNaN(y)) y = 0;
+				shellLine.lineTo(x, y);
+			}
+			g2.setStroke(new BasicStroke(0.1f));
+			g2.draw(shellLine);
 		}
-		g2.setStroke(new BasicStroke(0.1f));
-		g2.draw(shellLine);
+
+		// Draw holes
+		g2.setColor(new Color(255,0,0, 80));
+		g2.setStroke(new BasicStroke(0.01f));
+		for (NHole hole : holes) {
+			List<Location> locs = hole.getLocations();
+
+			GeneralPath holeLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, locs.size());
+			Location last = locs.get(locs.size()-1);
+			Vector2 lastPos = last.getPosition();
+			holeLine.moveTo(lastPos.getX(), lastPos.getY());
+
+			for (Location loc : locs) {
+				Vector2 pos = loc.getPosition();
+				double x = pos.getX();
+				double y = pos.getY();
+				if (Double.isNaN(x)) x = 0;
+				if (Double.isNaN(y)) y = 0;
+				holeLine.lineTo(x, y);
+			}
+
+
+
+			Vector2 center = new Vector2(0,0);
+			for (Location loc : locs) {
+				center = center.plus(loc.getPosition());
+			}
+			center = center.times(1.0/locs.size());
+
+			AffineTransform tr = new AffineTransform();
+			double scale = 0.85;
+			tr.translate(-center.getX() * scale, -center.getY() * scale);
+			tr.scale(scale, scale);
+			tr.translate(center.getX() / scale, center.getY() / scale);
+			holeLine.transform(tr);
+
+			g2.draw(holeLine);
+		}
 	}
 }

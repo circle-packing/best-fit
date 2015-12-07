@@ -27,7 +27,6 @@ public class NHole {
 	}
 
 	public Vector2 tryFit(Circle cir) {
-		// place it against the first two
 		Vector2 pos = Helpers.getMountPositionFor(cir, locations.get(0), locations.get(1));
 
 		// test with the rest

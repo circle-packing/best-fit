@@ -36,12 +36,20 @@ public class StepSolverDrawer extends Drawer implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			solver.doStepSolve();
-			repaint();
+			doSteps(1);
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+	}
+
+	public void doSteps(int count) {
+		for (int i = 0; i < count; ++i) {
+			if (!solver.doStepSolve()) {
+				break;
+			}
+		}
+		repaint();
 	}
 }

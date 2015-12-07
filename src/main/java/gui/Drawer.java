@@ -13,14 +13,12 @@ import java.awt.geom.AffineTransform;
 public class Drawer extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	private Vector2 mousePosDown;
-	private Vector2 offset;
-	private double scale;
+	private Vector2 offset = new Vector2(0, 0);
+	private double scale = 50;
+	private Vector2 mousePos = new Vector2(0, 0);
 
 	public Drawer() {
 		super();
-
-		this.offset = new Vector2(0, 0);
-		this.scale = 50;
 
 		addMouseListener(this);
 		addMouseWheelListener(this);
@@ -38,6 +36,8 @@ public class Drawer extends JPanel implements MouseListener, MouseMotionListener
 		super.paintComponent(g);
 
 		Graphics2D g2 = (Graphics2D)g;
+		//g2.drawString("m: " + mousePos.getX() + "," + mousePos.getY(), 2, 20);
+
 		g2.translate(offset.getX(), offset.getY());
 		g2.scale(scale, scale);
 
@@ -70,7 +70,10 @@ public class Drawer extends JPanel implements MouseListener, MouseMotionListener
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) { }
+	public void mouseMoved(MouseEvent e) {
+		//mousePos = new Vector2(e.getX(), e.getY()).minus(offset).times(1/scale);
+		//repaint();
+	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {

@@ -4,6 +4,8 @@ import model.Circle;
 import model.Location;
 import model.Vector2;
 
+import java.util.List;
+
 /**
  * Created by Pablo on 22/11/15.
  */
@@ -59,5 +61,18 @@ public abstract class Helpers {
 		//yi_prime = y2 - ry;
 
 		return new Vector2(x2 - rx, y2 - ry);
+	}
+
+	static public Vector2 tryPlace(Circle cir, Location first, Location second, Location... dontOverlap) {
+		Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+
+		// test with the rest
+		Location loc = new Location(pos, cir);
+		for (int i = 0; i < dontOverlap.length; ++i) {
+			if (dontOverlap[i].overlaps(loc)) {
+				return null;
+			}
+		}
+		return pos;
 	}
 }
