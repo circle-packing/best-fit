@@ -2,14 +2,12 @@ package solvers.bestfit;
 
 import com.sun.istack.internal.NotNull;
 import model.*;
-import org.apache.commons.math3.stat.descriptive.moment.VectorialCovariance;
 import solvers.Solver;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -229,8 +227,12 @@ public class BestFitSolver extends Solver {
 
 		doBestFit();
 
-		// Print some information
-		System.out.println("Error/Total overlap: " + getSolution().calculateError());
+		report();
+	}
+
+	public void report() {
+		System.out.println("Overlap: " + getSolution().calculateOverlap());
+		System.out.println("NaN: " + getSolution().countNaN());
 		System.out.println("Packed " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles.");
 		System.out.println("" + circlesToPack.size() + " still need to be packed.");
 	}

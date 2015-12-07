@@ -26,7 +26,7 @@ public class Solution {
 		return locations;
 	}
 
-	public double calculateError() {
+	public double calculateOverlap() {
 		double error = 0;
 		for (Location first : locations) {
 			Vector2 firstPos = first.getPosition();
@@ -44,5 +44,16 @@ public class Solution {
 			}
 		}
 		return error;
+	}
+
+	public int countNaN() {
+		int count = 0;
+		for (Location loc : locations) {
+			Vector2 pos = loc.getPosition();
+			if (Double.isNaN(pos.getX()) || Double.isNaN(pos.getY())) {
+				++count;
+			}
+		}
+		return count;
 	}
 }

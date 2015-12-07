@@ -22,9 +22,9 @@ public class Main {
 				frame.setSize(800, 600);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-				Drawer drawer = new SolutionDrawer(getSolution());
-				//StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				//drawer.doSteps(48);
+				//Drawer drawer = new SolutionDrawer(getSolution());
+				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
+				drawer.doSteps(1870);
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -61,8 +61,8 @@ public class Main {
 		//Problem problem = new Problem(count, 0);
 		//Problem problem = new Problem(count,  1.0/2.0);
 		//Problem problem = new Problem(count, -1.0/2.0);
-		Problem problem = new Problem(count, -2.0/3.0);
-		//Problem problem = new Problem(count, -1.0/5.0);
+		//Problem problem = new Problem(count, -2.0/3.0);
+		Problem problem = new Problem(count, -1.0/5.0); //gives overlap just after 1870th step.
 
 		// Problems more suited for this:
 		//Problem problem = new Problem(count,  -1.5);

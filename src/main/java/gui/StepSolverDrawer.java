@@ -47,6 +47,7 @@ public class StepSolverDrawer extends Drawer implements KeyListener {
 	public void doSteps(int count) {
 		for (int i = 0; i < count; ++i) {
 			if (!solver.doStepSolve()) {
+				solver.report();
 				break;
 			}
 		}
