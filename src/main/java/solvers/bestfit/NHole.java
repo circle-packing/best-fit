@@ -4,9 +4,7 @@ import model.Circle;
 import model.Location;
 import model.Vector2;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -30,7 +28,7 @@ public class NHole {
 
 	public Vector2 tryFit(Circle cir) {
 		// place it against the first two
-		Vector2 pos = SideMount.getMountPositionFor(cir, locations.get(0), locations.get(1));
+		Vector2 pos = Helpers.getMountPositionFor(cir, locations.get(0), locations.get(1));
 
 		// test with the rest
 		Location loc = new Location(pos, cir);

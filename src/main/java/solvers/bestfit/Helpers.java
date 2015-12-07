@@ -7,7 +7,7 @@ import model.Vector2;
 /**
  * Created by Pablo on 22/11/15.
  */
-public abstract class SideMount {
+public abstract class Helpers {
 
 	static public Vector2 getMountPositionFor(Circle cir, Location first, Location second) {
 		// from: http://stackoverflow.com/questions/3349125/circle-circle-intersection-points

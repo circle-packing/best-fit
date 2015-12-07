@@ -9,7 +9,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -67,7 +66,7 @@ public class BestFitSolver extends Solver {
 
 		// Place the third biggest circle on top of the first two (assuming they are positioned clockwise)
 		Circle third = circlesToPack.get(2);
-		Vector2 thirdPos = SideMount.getMountPositionFor(third, firstLoc, secondLoc);
+		Vector2 thirdPos = Helpers.getMountPositionFor(third, firstLoc, secondLoc);
 		Location thirdLoc = new Location(thirdPos, third);
 		getSolution().add(thirdLoc);
 
@@ -156,7 +155,7 @@ public class BestFitSolver extends Solver {
 			// Choose circle to pack
 			Circle cir = circlesToPack.get(0); //The biggest one, since circlesToPack is ordered
 			// Calculate position for the circle
-			Vector2 pos = SideMount.getMountPositionFor(cir, first, second);
+			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
 			Location loc = new Location(pos, cir);
 
 			System.out.println("Packing on shell " + cir + ", at " + pos);
