@@ -144,7 +144,7 @@ public class BestFitSolver extends Solver {
 				int j = (i+1) % shell.size();
 				Location f = shell.get(i);
 				Location s = shell.get(j);
-				double dist = f.getPosition().lengthSquared();
+				double dist = f.getPosition().plus(s.getPosition()).times(0.5).lengthSquared();
 				if (dist < minDist) {
 					minDist = dist;
 					first = f;
