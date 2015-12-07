@@ -77,7 +77,8 @@ public class Drawer extends JPanel implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		scale = Math.max(1, scale - e.getPreciseWheelRotation());
+		double mult = scale / (scale + 10.0);
+		scale = Math.max(0.05, scale - e.getPreciseWheelRotation() * mult);
 		repaint();
 	}
 }
