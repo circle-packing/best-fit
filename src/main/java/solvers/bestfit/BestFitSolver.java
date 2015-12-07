@@ -65,14 +65,17 @@ public class BestFitSolver extends Solver {
 		Vector2 firstPos = new Vector2(0, 0);
 		Vector2 secondPos = new Vector2(first.getRadius() + second.getRadius(), 0);
 
-		getSolution().add(first, firstPos);
-		getSolution().add(second, secondPos);
+		Location firstLoc = new Location(firstPos, first);
+		Location secondLoc = new Location(secondPos, second);
+
+		getSolution().add(firstLoc);
+		getSolution().add(secondLoc);
 
 		// Place the third biggest circle on top of the first two (assuming they are positioned clockwise)
-		SideMount mountThird = new SideMount(firstPos, secondPos, first, second);
 		Circle third = circlesToPack.get(2);
-		Vector2 thirdPos = mountThird.getMountPositionFor(third);
-		getSolution().add(third, thirdPos);
+		Vector2 thirdPos = SideMount.getMountPositionFor(third, firstLoc, secondLoc);
+		Location thirdLoc = new Location(thirdPos, third);
+		getSolution().add(thirdLoc);
 
 		circlesToPack.remove(first);
 		circlesToPack.remove(second);
@@ -82,9 +85,9 @@ public class BestFitSolver extends Solver {
 		holes.add(new Hole(firstPos, secondPos, thirdPos, first, second, third));
 		// Create the initial shell
 		// IMPORTANT: must be clock-wise
-		shell.add(new Location(firstPos, first));
-		shell.add(new Location(thirdPos, third));
-		shell.add(new Location(secondPos, second));
+		shell.add(firstLoc);
+		shell.add(thirdLoc);
+		shell.add(secondLoc);
 	}
 
 	private void doBestFit() {
@@ -126,6 +129,9 @@ public class BestFitSolver extends Solver {
 			// place the best fit
 			Vector2 center = toFill.getCenter();
 			getSolution().add(bestFit, center);
+
+			System.out.println("Packing in hole: " + bestFit + ", at " + center);
+
 			//remember as already been placed
 			circlesToPack.remove(bestFit);
 
@@ -138,14 +144,14 @@ public class BestFitSolver extends Solver {
 			Location second = null;
 			int firstIndex = 0;
 			int secondIndex = 0;
-			double biggest = 0;
+			double minDist = Double.MAX_VALUE;
 			for(int i = 0; i < shell.size(); ++i) {
 				int j = (i+1) % shell.size();
 				Location f = shell.get(i);
 				Location s = shell.get(j);
-				double size = f.getPosition().distanceTo(s.getPosition());
-				if (size > biggest) {
-					biggest = size;
+				double dist = f.getPosition().lengthSquared();
+				if (dist < minDist) {
+					minDist = dist;
 					first = f;
 					second = s;
 					firstIndex = i;
@@ -154,10 +160,11 @@ public class BestFitSolver extends Solver {
 			}
 			// Choose circle to pack
 			Circle cir = circlesToPack.get(0); //The biggest one, since circlesToPack is ordered
-
 			// Calculate position for the circle
 			Vector2 pos = SideMount.getMountPositionFor(cir, first, second);
 			Location loc = new Location(pos, cir);
+
+			System.out.println("Packing on shell " + cir + ", at " + pos);
 
 			// Check for overlap
 			int prevIndex = (firstIndex+shell.size()-1) % shell.size();
@@ -181,6 +188,7 @@ public class BestFitSolver extends Solver {
 			getSolution().add(cir, pos);
 
 			// TODO add new hole
+			holes.add(new Hole(first.getPosition(), second.getPosition(), loc.getPosition(), first.getCircle(), second.getCircle(), loc.getCircle()));
 			// Extend shell
 			shell.add(secondIndex, loc);
 		}
@@ -248,7 +256,11 @@ public class BestFitSolver extends Solver {
 		Location last = shell.get(shell.size()-1);
 		shellLine.moveTo(last.getPosition().getX(), last.getPosition().getY());
 		for (Location loc : shell) {
-			shellLine.lineTo(loc.getPosition().getX(), loc.getPosition().getY());
+			double x = loc.getPosition().getX();
+			double y = loc.getPosition().getY();
+			if (Double.isNaN(x)) x = 0;
+			if (Double.isNaN(y)) y = 0;
+			shellLine.lineTo(x, y);
 		}
 		g2.setStroke(new BasicStroke(0.1f));
 		g2.draw(shellLine);

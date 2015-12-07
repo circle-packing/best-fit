@@ -37,6 +37,10 @@ public class Vector2 {
 		return Math.hypot(x - other.x, y - other.y);
 	}
 
+	public double lengthSquared() {
+		return x*x + y*y;
+	}
+
 	@Override
 	public String toString() {
 		return "Vector2{" +
