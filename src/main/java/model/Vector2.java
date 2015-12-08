@@ -41,6 +41,12 @@ public class Vector2 {
 		return x*x + y*y;
 	}
 
+	public void normalize() {
+		double length = Math.sqrt(lengthSquared());
+		x /= length;
+		y /= length;
+	}
+
 	@Override
 	public String toString() {
 		return "Vector2{" +

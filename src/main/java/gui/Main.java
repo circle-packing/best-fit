@@ -22,9 +22,9 @@ public class Main {
 				frame.setSize(800, 600);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-				//Drawer drawer = new SolutionDrawer(getSolution());
-				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				drawer.doSteps(445);
+				Drawer drawer = new SolutionDrawer(getSolution());
+				//StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
+				//drawer.doSteps(523);
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -55,16 +55,16 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 1050;
-		// Packomania problems
-		//Problem problem = new Problem(count, 0);
-		//Problem problem = new Problem(count,  1.0/2.0);
-		Problem problem = new Problem(count, -1.0/2.0); // 1050 NaN problem, 1040 is fine. Overlap 3 after 445 steps (look at top-right)
-		//Problem problem = new Problem(count, -2.0/3.0); //not great packing, due to packing to 0,0. Beautiful though
-		//Problem problem = new Problem(count, -1.0/5.0);
+		int count = 35;
+		// Packomania problems:
+		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
+		Problem problem = new Problem(count,  1.0/2.0); // 3000 good. 5000 overlap problem.
+		//Problem problem = new Problem(count, -1.0/2.0); // 900 good result. 1000 still some overlap (just after 523 steps, see hole top left)
+		//Problem problem = new Problem(count, -2.0/3.0); // 549 ok result. 550 hole-problems.
+		//Problem problem = new Problem(count, -1.0/5.0); // 1000 good result. 5000 good too (1min)
 
-		// Problems more suited for this:
-		//Problem problem = new Problem(count,  -1.5); //1000 NaN Problem
+		// My problems:
+		//Problem problem = new Problem(count,  -1.5); //100 NaN & overlap problem
 		//Problem problem = new Problem(count,  -1.1);
 		//Problem problem = new Problem(count,  -1.01);
 		//Problem problem = new Problem(count,  -1); //300 NaN Problem, Ok at 250. Just after 170 steps overlap
@@ -72,7 +72,7 @@ public class Main {
 		//Problem problem = new Problem(count,  -0.9);
 		//Problem problem = new Problem(count,  -0.85);
 		//Problem problem = new Problem(count,  -0.8);
-		//Problem problem = new Problem(count,  -0.75);
+		//Problem problem = new Problem(count,  -0.75); // 250 fine
 		//Problem problem = new Problem(count,  -0.7);
 		//Problem problem = new Problem(count,  -0.6);
 

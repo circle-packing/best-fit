@@ -27,9 +27,18 @@ public class NHole {
 	}
 
 	public Vector2 tryFit(Circle cir) {
+		// Test to see if circle is smaller than all circles of this hole,
+		// otherwise it might try to place the circle over one of the hole-circles
+		for (Location loc : locations) {
+			if (cir.getRadius() > loc.getCircle().getRadius()) {
+				return null;
+			}
+		}
+
+		// Try to place circle
 		Vector2 pos = Helpers.getMountPositionFor(cir, locations.get(0), locations.get(1));
 
-		// test with the rest
+		// Test for overlap
 		Location loc = new Location(pos, cir);
 		for (int i = 2; i < locations.size(); ++i) {
 			if (locations.get(i).overlaps(loc)) {

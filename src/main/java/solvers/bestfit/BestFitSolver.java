@@ -134,7 +134,7 @@ public class BestFitSolver extends Solver {
 			}
 		}
 		else if (!shell.isEmpty()) {
-			// Find biggest mount on the shell
+			// Find closest mount on the shell to 0,0 //TODO Closest to round-circle center
 			Location first = null;
 			Location second = null;
 			int firstIndex = 0;
@@ -144,7 +144,14 @@ public class BestFitSolver extends Solver {
 				int j = (i+1) % shell.size();
 				Location f = shell.get(i);
 				Location s = shell.get(j);
-				double dist = f.getPosition().plus(s.getPosition()).times(0.5).lengthSquared();
+
+				Vector2 dir = s.getPosition().minus(f.getPosition());
+				dir.normalize();
+				double distDiff = f.getPosition().distanceTo(s.getPosition()) - f.getCircle().getRadius() - s.getCircle().getRadius();
+				// center between the two circles, if they touch it's the touching point, otherwise somewhere halfway to the other circle
+				Vector2 pos = f.getPosition().plus(dir.times(f.getCircle().getRadius() + distDiff/2.0));
+				double dist = pos.lengthSquared(); //f.getPosition().plus(s.getPosition()).times(0.5).lengthSquared();
+
 				if (dist < minDist) {
 					minDist = dist;
 					first = f;
@@ -153,63 +160,35 @@ public class BestFitSolver extends Solver {
 					secondIndex = j;
 				}
 			}
-			// Choose circle to pack
-			Circle cir = circlesToPack.get(0); //The biggest one, since circlesToPack is ordered
-			// Calculate position for the circle
-			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
-			Location loc = new Location(pos, cir);
 
-			System.out.println("Packing on shell " + cir + ", at " + pos);
-
-			// Check for overlap
 			int prevIndex = (firstIndex+shell.size()-1) % shell.size();
 			Location prev = shell.get(prevIndex);
-			if (loc.overlaps(prev)) {
-				System.out.println("Tried mounting circle, but overlap with previous.");
-				NHole temp = new NHole(first, second, prev);
-				Location tempLoc = findBestFitFor(temp, circlesToPack);
-				if (tempLoc != null) {
-					shell.set(firstIndex, tempLoc);
-					circlesToPack.remove(tempLoc.getCircle());
-					System.out.println("Instead packed " + tempLoc);
-					getSolution().add(tempLoc);
-					// TODO Create holes
-				}
-				else {
-					System.out.println("And couldn't find one that does fit.");
-					shell.remove(firstIndex);
-				}
-				return true;
-			}
 
 			int nextIndex = (secondIndex+1) % shell.size();
 			Location next = shell.get(nextIndex);
-			if (loc.overlaps(next)) {
-				System.out.println("Tried mounting circle, but overlap with previous.");
-				NHole temp = new NHole(first, second, next);
-				Location tempLoc = findBestFitFor(temp, circlesToPack);
-				if (tempLoc != null) {
-					shell.set(secondIndex, tempLoc);
-					circlesToPack.remove(tempLoc.getCircle());
-					System.out.println("Instead packed " + tempLoc);
-					getSolution().add(tempLoc);
-					// TODO Create holes
-				}
-				else {
-					System.out.println("And couldn't find one that does fit.");
-					shell.remove(secondIndex);
-				}
-				return true;
+
+			// Choose circle to pack
+			BestFitResult res = findBestFitFor(prev, first, second, next, circlesToPack);
+
+			if (res.success) {
+				Location loc = res.loc;
+				System.out.println("Packing on shell: " + loc);
+
+				// Everything went well, no overlaps and such
+				circlesToPack.remove(loc.getCircle());
+				getSolution().add(loc);
+
+				// TODO add new hole
+				holes.add(new NHole(first, second, loc));
+				// Extend shell
+				shell.add(secondIndex, loc);
 			}
-
-			// Everything went well, no overlaps and such
-			circlesToPack.remove(cir);
-			getSolution().add(loc);
-
-			// TODO add new hole
-			holes.add(new NHole(first, second, loc));
-			// Extend shell
-			shell.add(secondIndex, loc);
+			else {
+				//Nothing fits, and never will
+				System.out.println("Tried packing on shell, but nothing small enough. Updating shell...");
+				shell.remove(res.loc);
+				// TODO Shrink the shell, but how? Depending on next/prev collision?
+			}
 		}
 		else {
 			System.out.println("Something went wrong, there are circles, but nowhere to place them.");
@@ -259,6 +238,41 @@ public class BestFitSolver extends Solver {
 		return null;
 	}
 
+	/**
+	 * Returnes a result.
+	 * If success == true then loc is the bestfitting circle and it's pos.
+	 * If success == false then loc contains the circle (first/second) to be removed.
+	 */
+	private BestFitResult findBestFitFor(Location prev, Location first, Location second, Location next, List<Circle> sortedBigToSmall) {
+		Location toRemove = null;
+
+		for (Circle cir : sortedBigToSmall) {
+			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+			Location loc = new Location(pos, cir);
+			if (loc.overlaps(prev)) {
+				toRemove = first;
+			}
+			else if (loc.overlaps(next)) {
+				toRemove = second;
+				continue;
+			}
+			else {
+				return new BestFitResult(true, loc);
+			}
+		}
+		return new BestFitResult(false, toRemove);
+	}
+
+	class BestFitResult {
+		public boolean success;
+		public Location loc;
+
+		public BestFitResult(boolean success, Location loc) {
+			this.success = success;
+			this.loc = loc;
+		}
+	}
+
 	public void drawState(Graphics2D g2) {
 
 		// Draw circles
@@ -277,6 +291,7 @@ public class BestFitSolver extends Solver {
 
 		// Draw shell
 		g2.setColor(new Color(0, 150, 255, 100));
+		g2.setStroke(new BasicStroke(0.05f));
 		{
 			GeneralPath shellLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, shell.size());
 			Location last = shell.get(shell.size() - 1);
@@ -288,8 +303,30 @@ public class BestFitSolver extends Solver {
 				if (Double.isNaN(y)) y = 0;
 				shellLine.lineTo(x, y);
 			}
-			g2.setStroke(new BasicStroke(0.1f));
 			g2.draw(shellLine);
+		}
+
+		// Draw shell place points
+		g2.setColor(new Color(0, 255, 51, 100));
+		for(int i = 0; i < shell.size(); ++i) {
+			int j = (i+1) % shell.size();
+			Location f = shell.get(i);
+			Location s = shell.get(j);
+
+			Vector2 dir = s.getPosition().minus(f.getPosition());
+			dir.normalize();
+			double distDiff = f.getPosition().distanceTo(s.getPosition()) - f.getCircle().getRadius() - s.getCircle().getRadius();
+			// center between the two circles, if they touch it's the touching point, otherwise somewhere halfway to the other circle
+			Vector2 p = f.getPosition().plus(dir.times(f.getCircle().getRadius() + distDiff/2.0));
+
+			double r = .02;
+			double x = p.getX();
+			x = x - r;
+			double y = p.getY();
+			y = y - r;
+
+			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, r*2.0, r*2.0);
+			g2.fill(circle);
 		}
 
 		// Draw holes
