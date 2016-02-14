@@ -1,7 +1,5 @@
 package model;
 
-import com.sun.javafx.beans.annotations.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +11,7 @@ public class Problem {
 
 	private final List<Circle> circles;
 
-	public Problem(@NonNull List<Circle> circles) {
+	public Problem(List<Circle> circles) {
 		this.circles = circles;
 	}
 
