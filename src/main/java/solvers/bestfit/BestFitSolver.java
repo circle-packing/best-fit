@@ -153,7 +153,9 @@ public class BestFitSolver extends Solver {
 				double distDiff = f.getPosition().distanceTo(s.getPosition()) - f.getCircle().getRadius() - s.getCircle().getRadius();
 				// center between the two circles, if they touch it's the touching point, otherwise somewhere halfway to the other circle
 				Vector2 pos = f.getPosition().plus(dir.times(f.getCircle().getRadius() + distDiff/2.0));
-				double dist = pos.lengthSquared(); //f.getPosition().plus(s.getPosition()).times(0.5).lengthSquared();
+
+				//double dist = pos.lengthSquared(); //f.getPosition().plus(s.getPosition()).times(0.5).lengthSquared();
+				double dist = enclosingCircle.getPosition().distanceTo(pos);
 
 				if (dist < minDist) {
 					minDist = dist;
