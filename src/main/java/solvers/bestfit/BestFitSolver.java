@@ -1,6 +1,5 @@
 package solvers.bestfit;
 
-import com.sun.istack.internal.NotNull;
 import model.*;
 import solvers.Solver;
 
@@ -23,7 +22,9 @@ public class BestFitSolver extends Solver {
 
 	private List<Location> shell;
 
-	public BestFitSolver(@NotNull Problem problem) {
+	private Location enclosingCircle = null;
+
+	public BestFitSolver(Problem problem) {
 		super(problem);
 	}
 
@@ -82,6 +83,8 @@ public class BestFitSolver extends Solver {
 		shell.add(firstLoc);
 		shell.add(thirdLoc);
 		shell.add(secondLoc);
+
+		enclosingCircle = Location.calculateEnclosingCircle(firstLoc, secondLoc, thirdLoc);
 	}
 
 	private void doBestFit() {
