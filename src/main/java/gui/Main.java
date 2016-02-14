@@ -24,7 +24,7 @@ public class Main {
 
 				Drawer drawer = new SolutionDrawer(getSolution());
 				//StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				//drawer.doSteps(523);
+				//drawer.doSteps(-1); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -55,7 +55,7 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 35;
+		int count = 1000;
 		// Packomania problems:
 		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
 		Problem problem = new Problem(count,  1.0/2.0); // 3000 good. 5000 overlap problem.
