@@ -3,6 +3,8 @@ package model;
 import model.Circle;
 import model.Vector2;
 
+import java.util.List;
+
 /**
  * Created by Pablo on 30/11/15.
  */
@@ -31,7 +33,7 @@ public class Location {
 	public boolean contains(Location other) {
 		double xc0 = position.getX() - other.position.getX();
 		double yc0 = position.getY() - other.position.getY();
-		return Math.sqrt(xc0 * xc0 + yc0 * yc0) < circle.getRadius() - other.circle.getRadius() + Double.MIN_NORMAL;
+		return Math.sqrt(xc0 * xc0 + yc0 * yc0) < circle.getRadius() - other.circle.getRadius() + 1e-10;
 	}
 
 	public static Location calculateEnclosingCircle(Location first, Location second) {
@@ -77,6 +79,52 @@ public class Location {
 		double y = ya + yb * r + y1;
 
 		return new Location(new Vector2(x,y), new Circle(-1, r));
+	}
+
+	public static Location calculateEnclosingCircle(List<Location> circles) {
+		for(Location first : circles) {
+			for(Location second : circles) {
+				if (first == second) continue;
+
+				Location enclosingFS = calculateEnclosingCircle(first, second);
+				for(Location third : circles) {
+					if (third == first || third == second) continue;
+
+					Location enclosingST = calculateEnclosingCircle(second, third);
+					Location enclosingFT = calculateEnclosingCircle(first, third);
+
+					Location enclosingTotal = null;
+					if (enclosingFS.contains(third)) {
+						enclosingTotal = enclosingFS;
+					}
+					else if (enclosingST.contains(first)) {
+						enclosingTotal = enclosingST;
+					}
+					else if (enclosingFT.contains(second)) {
+						enclosingTotal = enclosingFT;
+					}
+					else {
+						enclosingTotal = calculateEnclosingCircle(first, second, third);
+					}
+
+					boolean enclosesAll = true;
+					for(Location other : circles) {
+						if (!enclosingTotal.contains(other)) {
+							enclosesAll = false;
+							break;
+						}
+					}
+
+					if (enclosesAll) {
+						return enclosingTotal;
+					}
+					//else continue searching;
+				}
+			}
+		}
+
+		// Should never happen
+		throw new RuntimeException("Couldn't find enclosing circle, something went wrong :s");
 	}
 
 	@Override

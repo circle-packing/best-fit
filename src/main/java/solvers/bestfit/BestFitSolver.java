@@ -194,6 +194,10 @@ public class BestFitSolver extends Solver {
 				shell.remove(res.loc);
 				// TODO Shrink the shell, but how? Depending on next/prev collision?
 			}
+
+			if (!enclosingCircle.contains(res.loc)) {
+				enclosingCircle = Location.calculateEnclosingCircle(shell);
+			}
 		}
 		else {
 			System.out.println("Something went wrong, there are circles, but nowhere to place them.");
@@ -370,6 +374,21 @@ public class BestFitSolver extends Solver {
 			holeLine.transform(tr);
 
 			g2.draw(holeLine);
+		}
+
+		//Draw enclosing circle
+		g2.setColor(new Color(0, 208, 9, 255));
+		g2.setStroke(new BasicStroke(0.2f));
+		{
+			double r = enclosingCircle.getCircle().getRadius();
+			Vector2 p = enclosingCircle.getPosition();
+			double x = p.getX();
+			x = x - r;
+			double y = p.getY();
+			y = y - r;
+
+			Ellipse2D.Double circle = new Ellipse2D.Double(x, y, r*2.0, r*2.0);
+			g2.draw(circle);
 		}
 	}
 }
