@@ -1,8 +1,5 @@
 package model;
 
-import model.Circle;
-import model.Vector2;
-
 import java.util.List;
 
 /**
@@ -82,6 +79,37 @@ public class Location {
 	}
 
 	public static Location calculateEnclosingCircle(List<Location> circles) {
+		return recursiveWelzl(
+				circles.toArray(new Location[circles.size()]), circles.size(),
+				new Location[3], 0);
+	}
+
+	private static Location recursiveWelzl(Location[] points, int n, Location[] boundary, int b)
+	{
+		Location localCircle = null;
+
+		// terminal cases
+		if (b == 3)
+			localCircle = calculateEnclosingCircle(boundary[0], boundary[1], boundary[2]);
+		else if (n == 1 && b == 0)
+			localCircle = points[0];
+		else if (n == 0 && b == 2)
+			localCircle = calculateEnclosingCircle(boundary[0], boundary[1]);
+		else if (n == 1 && b == 1)
+			localCircle = calculateEnclosingCircle(boundary[0], points[0]);
+		else
+		{
+			localCircle = recursiveWelzl(points, n-1, boundary, b);
+			if (!localCircle.contains(points[n-1]))
+			{
+				boundary[b++] = points[n-1];
+				localCircle = recursiveWelzl(points, n-1, boundary, b);
+			}
+		}
+		return localCircle;
+	}
+
+	public static Location dumb_calculateEnclosingCircle(List<Location> circles) {
 		for(Location first : circles) {
 			for(Location second : circles) {
 				if (first == second) continue;

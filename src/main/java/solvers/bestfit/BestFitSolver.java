@@ -223,6 +223,7 @@ public class BestFitSolver extends Solver {
 		System.out.println("NaN: " + getSolution().countNaN());
 		System.out.println("Packed " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles.");
 		System.out.println("" + circlesToPack.size() + " still need to be packed.");
+		System.out.println("Enclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
 	}
 
 	public void startStepSolve() {
