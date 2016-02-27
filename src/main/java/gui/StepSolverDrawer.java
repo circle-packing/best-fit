@@ -58,6 +58,7 @@ public class StepSolverDrawer extends Drawer implements KeyListener {
 				break;
 			}
 		}
+		solver.report();
 		repaint();
 	}
 }
