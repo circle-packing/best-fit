@@ -24,7 +24,7 @@ public class Location {
 	}
 
 	public boolean overlaps(Location other) {
-		return (circle.getRadius() + other.circle.getRadius()) > position.distanceTo(other.position);
+		return (circle.getRadius() + other.circle.getRadius()) > position.distanceTo(other.position) + 1e-10;
 	}
 
 	public boolean contains(Location other) {
