@@ -11,6 +11,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by Pablo on 22/11/15.
  */
@@ -23,6 +26,8 @@ public class BestFitSolver extends Solver {
 	private List<Location> shell;
 
 	private Location enclosingCircle = null;
+
+	static final Logger LOG = LoggerFactory.getLogger("default");
 
 	public BestFitSolver(Problem problem) {
 		super(problem);
@@ -83,8 +88,7 @@ public class BestFitSolver extends Solver {
 		shell.add(firstLoc);
 		shell.add(thirdLoc);
 		shell.add(secondLoc);
-
-
+		
 		enclosingCircle = Location.calculateEnclosingCircle(Arrays.asList(firstLoc, secondLoc, thirdLoc));
 	}
 
@@ -109,7 +113,7 @@ public class BestFitSolver extends Solver {
 	 */
 	private boolean bestFitStep() {
 		if (circlesToPack.isEmpty()) {
-			System.out.println("No more circles to place.");
+			LOG.trace("No more circles to place.");
 			return false;
 		}
 
@@ -119,14 +123,14 @@ public class BestFitSolver extends Solver {
 			Location bestFit = findBestFitFor(toFill, circlesToPack);
 
 			if (bestFit == null) { //none fit
-				System.out.println("Tried to fill a hole, but no circle is small enough.");
+				LOG.trace("Tried to fill a hole, but no circle is small enough.");
 				return true; //just go on with the algo, this hole can't be filled
 			}
 
 			// place the best fit
 			getSolution().add(bestFit);
 
-			System.out.println("Packing in hole: " + bestFit);
+			LOG.trace("Packing in hole: " + bestFit);
 
 			//remember as already been placed
 			circlesToPack.remove(bestFit.getCircle());
@@ -178,7 +182,7 @@ public class BestFitSolver extends Solver {
 
 			if (res.success) {
 				Location loc = res.loc;
-				System.out.println("Packing on shell: " + loc);
+				LOG.trace("Packing on shell: " + loc);
 
 				// Everything went well, no overlaps and such
 				circlesToPack.remove(loc.getCircle());
@@ -191,7 +195,7 @@ public class BestFitSolver extends Solver {
 			}
 			else {
 				//Nothing fits, and never will
-				System.out.println("Tried packing on shell, but nothing small enough. Updating shell...");
+				LOG.trace("Tried packing on shell, but nothing small enough. Updating shell...");
 				shell.remove(res.loc);
 				// TODO Shrink the shell, but how? Depending on next/prev collision?
 			}
@@ -201,7 +205,7 @@ public class BestFitSolver extends Solver {
 			}
 		}
 		else {
-			System.out.println("Something went wrong, there are circles, but nowhere to place them.");
+			LOG.warn("Something went wrong, there are circles, but nowhere to place them.");
 			return false;
 		}
 
@@ -220,11 +224,11 @@ public class BestFitSolver extends Solver {
 	}
 
 	public void report() {
-		System.out.println("Overlap: " + getSolution().calculateOverlap());
-		System.out.println("NaN: " + getSolution().countNaN());
-		System.out.println("Packed " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles.");
-		System.out.println("" + circlesToPack.size() + " still need to be packed.");
-		System.out.println("Enclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
+		LOG.info("Overlap: " + getSolution().calculateOverlap());
+		LOG.info("NaN: " + getSolution().countNaN());
+		LOG.info("Packed " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles.");
+		LOG.info("" + circlesToPack.size() + " still need to be packed.");
+		LOG.info("Enclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
 	}
 
 	public void startStepSolve() {
