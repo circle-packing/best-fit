@@ -84,7 +84,8 @@ public class BestFitSolver extends Solver {
 		shell.add(thirdLoc);
 		shell.add(secondLoc);
 
-		enclosingCircle = Location.calculateEnclosingCircle(firstLoc, secondLoc, thirdLoc);
+
+		enclosingCircle = Location.calculateEnclosingCircle(Arrays.asList(firstLoc, secondLoc, thirdLoc));
 	}
 
 	private void doBestFit() {
