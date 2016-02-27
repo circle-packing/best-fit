@@ -300,8 +300,8 @@ public class BestFitSolver extends Solver {
 		}
 
 		// Draw shell
-		g2.setColor(new Color(0, 150, 255, 100));
-		g2.setStroke(new BasicStroke(0.05f));
+		g2.setColor(new Color(255, 206, 0, 255));
+		g2.setStroke(new BasicStroke((float)(1.5 / g2.getTransform().getScaleX())));
 		{
 			GeneralPath shellLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, shell.size());
 			Location last = shell.get(shell.size() - 1);
@@ -317,7 +317,7 @@ public class BestFitSolver extends Solver {
 		}
 
 		// Draw shell place points
-		g2.setColor(new Color(0, 255, 51, 100));
+		g2.setColor(new Color(0, 255, 51, 150));
 		for(int i = 0; i < shell.size(); ++i) {
 			int j = (i+1) % shell.size();
 			Location f = shell.get(i);
@@ -341,7 +341,7 @@ public class BestFitSolver extends Solver {
 
 		// Draw holes
 		g2.setColor(new Color(255,0,0, 80));
-		g2.setStroke(new BasicStroke((float)(1.0 / g2.getTransform().getScaleX())));
+		g2.setStroke(new BasicStroke((float)(1.5 / g2.getTransform().getScaleX())));
 		for (NHole hole : holes) {
 			List<Location> locs = hole.getLocations();
 
@@ -368,7 +368,7 @@ public class BestFitSolver extends Solver {
 			center = center.times(1.0/locs.size());
 
 			AffineTransform tr = new AffineTransform();
-			double scale = 0.85;
+			double scale = 0.8;
 			tr.translate(-center.getX() * scale, -center.getY() * scale);
 			tr.scale(scale, scale);
 			tr.translate(center.getX() / scale, center.getY() / scale);
@@ -379,7 +379,7 @@ public class BestFitSolver extends Solver {
 
 		//Draw enclosing circle
 		g2.setColor(new Color(0, 208, 9, 255));
-		g2.setStroke(new BasicStroke(0.2f));
+		g2.setStroke(new BasicStroke((float)(2.0 / g2.getTransform().getScaleX())));
 		{
 			double r = enclosingCircle.getCircle().getRadius();
 			Vector2 p = enclosingCircle.getPosition();
