@@ -88,7 +88,7 @@ public class BestFitSolver extends Solver {
 		shell.add(firstLoc);
 		shell.add(thirdLoc);
 		shell.add(secondLoc);
-		
+
 		enclosingCircle = Location.calculateEnclosingCircle(Arrays.asList(firstLoc, secondLoc, thirdLoc));
 	}
 
@@ -334,7 +334,7 @@ public class BestFitSolver extends Solver {
 			// center between the two circles, if they touch it's the touching point, otherwise somewhere halfway to the other circle
 			Vector2 p = f.getPosition().plus(dir.times(f.getCircle().getRadius() + distDiff/2.0));
 
-			double r = .02;
+			double r = (float)(2.0 / g2.getTransform().getScaleX());
 			double x = p.getX();
 			x = x - r;
 			double y = p.getY();
