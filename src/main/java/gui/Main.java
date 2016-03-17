@@ -27,9 +27,9 @@ public class Main {
 				frame.setSize(800, 600);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-				Drawer drawer = new SolutionDrawer(getSolution());
-				//StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				//drawer.doSteps(-1); //-1 to completely solve
+				//Drawer drawer = new SolutionDrawer(getSolution());
+				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
+				drawer.doSteps(5107); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -60,12 +60,12 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 1000;
+		int count = 3000;
 		// Packomania problems:
-		Problem problem = new Problem(count, 0); // 5000 good result (1min)
-		//Problem problem = new Problem(count,  1.0/2.0); // 3000 good. 5000 overlap problem.
-		//Problem problem = new Problem(count, -1.0/2.0); // 900 good result. 1000 still some overlap (just after 523 steps, see hole top left)
-		//Problem problem = new Problem(count, -2.0/3.0); // 549 ok result. 550 hole-problems.
+		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
+		Problem problem = new Problem(count,  1.0/2.0); // 3000 overlap problem
+		//Problem problem = new Problem(count, -1.0/2.0); //eerste overlap na 1911, na 2940 ontsnapping, 5107 loopt shell mis
+		//Problem problem = new Problem(count, -2.0/3.0); //2000 overlap problem
 		//Problem problem = new Problem(count, -1.0/5.0); // 1000 good result. 5000 good too (1min)
 
 		// My problems:
