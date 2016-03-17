@@ -155,6 +155,36 @@ public class Location {
 		throw new RuntimeException("Couldn't find enclosing circle, something went wrong :s");
 	}
 
+	public double areaOfIntersectionWith(Location other)
+	{
+		double x0 = position.getX(), y0 = position.getY(), r0 = circle.getRadius();
+		double x1 = other.position.getX(), y1 = other.position.getY(), r1 = other.circle.getRadius();
+		double rr0 = r0 * r0;
+		double rr1 = r1 * r1;
+		double d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+
+		if (d <= Math.abs(r0 - r1)) // full overlap
+		{
+			// Return area of smallest circle1
+			return Math.PI * Math.min(rr0, rr1);
+		}
+		else // Circles partially overlap
+		{
+			// from http://mathforum.org/library/drmath/view/54785.html
+			double a = (Math.acos((rr0 + (d * d) - rr1) / (2 * r0 * d))) * 2;
+			double b = (Math.acos((rr1 + (d * d) - rr0) / (2 * r1 * d))) * 2;
+			double area1 = 0.5 * b * rr1 - 0.5 * rr1 * Math.sin(b);
+			double area2 = 0.5 * a * rr0 - 0.5 * rr0 * Math.sin(a);
+			double overlap = area1 + area2;
+
+			if (Double.isNaN(overlap)) { // NaN if no overlap
+				return 0;
+			}
+			return overlap;
+		}
+	}
+
+
 	@Override
 	public String toString() {
 		return "Location{" +

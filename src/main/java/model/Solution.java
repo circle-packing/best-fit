@@ -27,23 +27,13 @@ public class Solution {
 	}
 
 	public double calculateOverlap() {
-		double error = 0;
-		for (Location first : locations) {
-			Vector2 firstPos = first.getPosition();
-			double firstRad = first.getCircle().getRadius();
-			for (Location second : locations) {
-				Vector2 secondPos = second.getPosition();
-				double secondRad = second.getCircle().getRadius();
-
-				if (first != second) {
-					double diff = firstPos.distanceTo(secondPos) - (firstRad + secondRad);
-					if (diff < 0) {
-						error += diff;
-					}
-				}
+		double overlap = 0;
+		for (int i = 0; i < locations.size(); ++i) {
+			for (int j = i+1; j < locations.size(); ++j) {
+				overlap += locations.get(i).areaOfIntersectionWith(locations.get(j));
 			}
 		}
-		return error;
+		return overlap;
 	}
 
 	public int countNaN() {
