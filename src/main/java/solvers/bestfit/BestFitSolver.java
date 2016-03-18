@@ -142,7 +142,7 @@ public class BestFitSolver extends Solver {
 			}
 		}
 		else if (!shell.isEmpty()) {
-			// Find closest mount on the shell to 0,0 //TODO Closest to round-circle center
+			// Find closest mount on the shell to 0,0 //DONE Closest to round-circle center
 			Location first = null;
 			Location second = null;
 			int firstIndex = 0;
@@ -180,8 +180,9 @@ public class BestFitSolver extends Solver {
 			// Choose circle to pack
 			BestFitResult res = findBestFitFor(prev, first, second, next, circlesToPack);
 
-			if (res.success) {
+			if (res.success) { //loc contains position and circle to pack
 				Location loc = res.loc;
+
 				LOG.trace("Packing on shell: " + loc);
 
 				// Everything went well, no overlaps and such
@@ -193,7 +194,7 @@ public class BestFitSolver extends Solver {
 				// Extend shell
 				shell.add(secondIndex, loc);
 			}
-			else {
+			else { //no success, now loc contains circle to remove
 				//Nothing fits, and never will
 				LOG.trace("Tried packing on shell, but nothing small enough. Updating shell...");
 				shell.remove(res.loc);
@@ -263,17 +264,34 @@ public class BestFitSolver extends Solver {
 
 		for (Circle cir : sortedBigToSmall) {
 			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+
 			Location loc = new Location(pos, cir);
 			if (loc.overlaps(prev)) {
 				toRemove = first;
 			}
 			else if (loc.overlaps(next)) {
 				toRemove = second;
-				continue;
 			}
 			else {
 				return new BestFitResult(true, loc);
 			}
+		}
+		return new BestFitResult(false, toRemove);
+	}
+
+	private BestFitResult findBestFitFor(Circle cir, Location prev, Location first, Location second, Location next) {
+		Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+		Location toRemove = null;
+
+		Location loc = new Location(pos, cir);
+		if (loc.overlaps(prev)) {
+			toRemove = first;
+		}
+		else if (loc.overlaps(next)) {
+			toRemove = second;
+		}
+		else {
+			return new BestFitResult(true, loc);
 		}
 		return new BestFitResult(false, toRemove);
 	}
