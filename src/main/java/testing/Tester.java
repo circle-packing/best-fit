@@ -57,8 +57,6 @@ public class Tester {
         long endTime = System.nanoTime();
 
         long ns = (endTime - startTime);
-        long ms = (ns + 500000) / 1000000;
-        long s = (ms + 500) / 1000;
         Solution sol = solver.getSolution();
 
         int circleCount = problem.getCircles().size();
@@ -66,7 +64,7 @@ public class Tester {
         double overlap = sol.calculateOverlap();
         int nanCount = sol.countNaN();
 
-        WriteInfo(id, circleCount, finalSize, overlap, nanCount);
+        WriteInfo(id, circleCount, finalSize, ns, overlap, nanCount);
     }
 
     void WriteInfoHeader() throws IOException {
@@ -76,10 +74,13 @@ public class Tester {
         writer.append("circlecount");
         writer.append(DELIMITER);
 
-        writer.append("size");
+        writer.append("size (radius)");
         writer.append(DELIMITER);
 
-        writer.append("overlap");
+        writer.append("time (ns)");
+        writer.append(DELIMITER);
+
+        writer.append("overlap (square units)");
         writer.append(DELIMITER);
 
         writer.append("nancount");
@@ -89,7 +90,7 @@ public class Tester {
         writer.flush();
     }
 
-    void WriteInfo(String id, int circleCount, double finalSize, double overlap, int nanCount) throws IOException {
+    void WriteInfo(String id, int circleCount, double finalSize, long nsTime, double overlap, int nanCount) throws IOException {
         writer.append(id);
         writer.append(DELIMITER);
 
@@ -99,11 +100,13 @@ public class Tester {
         writer.append(Double.toString(finalSize));
         writer.append(DELIMITER);
 
+        writer.append(Long.toString(nsTime));
+        writer.append(DELIMITER);
+
         writer.append(Double.toString(overlap));
         writer.append(DELIMITER);
 
         writer.append(Integer.toString(nanCount));
-        writer.append(DELIMITER);
 
         writer.newLine();
         writer.flush();
