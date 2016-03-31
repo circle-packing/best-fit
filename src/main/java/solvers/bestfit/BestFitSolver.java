@@ -220,8 +220,6 @@ public class BestFitSolver extends Solver {
 		packFirstThree();
 
 		doBestFit();
-
-		report();
 	}
 
 	public void report() {

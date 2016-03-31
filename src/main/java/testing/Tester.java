@@ -2,6 +2,8 @@ package testing;
 
 import model.Problem;
 import model.Solution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import solvers.Solver;
 import solvers.bestfit.BestFitSolver;
 
@@ -17,7 +19,9 @@ import java.util.Date;
  */
 public class Tester {
 
-    static String DELIMITER = ", ";
+    static final String DELIMITER = ", ";
+
+    static final Logger LOG = LoggerFactory.getLogger("default");
 
     BufferedWriter writer;
 
@@ -31,10 +35,11 @@ public class Tester {
         WriteInfoHeader();
     }
 
-    public void DoAllTests() throws IOException {
-        int from = 5;
-        int to = 100;
+    public void DoAllTestsDefault() throws IOException {
+        DoAllTests(5, 100);
+    }
 
+    public void DoAllTests(int from, int to) throws IOException {
         DoPackomania(from, to, 0, "0");
         DoPackomania(from, to, 1.0/2.0, "1/2");
         DoPackomania(from, to, -1.0/2.0, "-1/2");
@@ -65,6 +70,7 @@ public class Tester {
         int nanCount = sol.countNaN();
 
         WriteInfo(id, circleCount, finalSize, ns, overlap, nanCount);
+        LOG.info("Test written: " + id);
     }
 
     void WriteInfoHeader() throws IOException {
@@ -84,7 +90,6 @@ public class Tester {
         writer.append(DELIMITER);
 
         writer.append("nancount");
-        writer.append(DELIMITER);
 
         writer.newLine();
         writer.flush();

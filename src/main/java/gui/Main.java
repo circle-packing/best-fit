@@ -24,7 +24,7 @@ public class Main {
 	public static void main(String args[]) throws IOException {
 
 		Tester tester = new Tester();
-		tester.DoAllTests();
+		tester.DoAllTestsDefault();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -46,7 +46,7 @@ public class Main {
 	}
 
 	private static Solution getSolution() {
-		Solver solver = new BestFitSolver(getProblem());
+		BestFitSolver solver = new BestFitSolver(getProblem());
 
 		long startTime = System.nanoTime();
 		solver.solve();
@@ -55,6 +55,7 @@ public class Main {
 		long ms = (ns + 500000) / 1000000;
 		long s = (ms + 500) / 1000;
 
+		solver.report();
 		LOG.info(String.format("Solve time %d(s); %d(ms); %d(ns)", s, ms, ns ));
 
 		return solver.getSolution();
