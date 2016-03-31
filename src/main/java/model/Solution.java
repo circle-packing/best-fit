@@ -46,4 +46,8 @@ public class Solution {
 		}
 		return count;
 	}
+
+	public Location calculateBoundingCircle() {
+		return Location.calculateEnclosingCircle(locations);
+	}
 }
