@@ -36,19 +36,21 @@ public class Tester {
     }
 
     public void DoAllTestsDefault() throws IOException {
-        DoAllTests(5, 100);
+        DoPackomaniaDefault(0, "0");
+        DoPackomaniaDefault(1.0/2.0, "1/2");
+        DoPackomaniaDefault(-1.0/2.0, "-1/2");
+        DoPackomaniaDefault(-2.0/3.0, "-2/3");
+        DoPackomaniaDefault(-1.0/5.0, "-1/5");
     }
 
-    public void DoAllTests(int from, int to) throws IOException {
-        DoPackomania(from, to, 0, "0");
-        DoPackomania(from, to, 1.0/2.0, "1/2");
-        DoPackomania(from, to, -1.0/2.0, "-1/2");
-        DoPackomania(from, to, -2.0/3.0, "-2/3");
-        DoPackomania(from, to, -1.0/5.0, "-1/5");
+    public void DoPackomaniaDefault(double power, String id) throws IOException {
+        DoPackomania(5, 100, 1, power, id);
+        DoPackomania(105, 500, 5, power, id);
+        DoPackomania(510, 1000, 10, power, id);
     }
 
-    public void DoPackomania(int from, int to, double power, String id) throws IOException {
-        for(int i = from; i <= to; ++i) {
+    public void DoPackomania(int from, int to, int step, double power, String id) throws IOException {
+        for(int i = from; i <= to; i += step) {
             Problem p = new Problem(i, power);
             DoAndWriteTest(p, "Packomania " + id + " (" + i + ")");
         }
