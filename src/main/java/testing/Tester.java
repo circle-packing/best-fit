@@ -35,25 +35,37 @@ public class Tester {
         WriteInfoHeader();
     }
 
-    public void DoAllTestsDefault() throws IOException {
-        DoPackomaniaDefault(0, "0");
-        DoPackomaniaDefault(1.0/2.0, "1/2");
-        DoPackomaniaDefault(-1.0/2.0, "-1/2");
-        DoPackomaniaDefault(-2.0/3.0, "-2/3");
-        DoPackomaniaDefault(-1.0/5.0, "-1/5");
+    public void DoDefaultTests() throws IOException {
+        DoPackomaniaDefaultRanges(0, "0");
+        DoPackomaniaDefaultRanges(1.0/2.0, "1/2");
+        DoPackomaniaDefaultRanges(-1.0/2.0, "-1/2");
+        DoPackomaniaDefaultRanges(-2.0/3.0, "-2/3");
+        DoPackomaniaDefaultRanges(-1.0/5.0, "-1/5");
     }
 
-    public void DoPackomaniaDefault(double power, String id) throws IOException {
-        DoPackomania(5, 100, 1, power, id);
-        DoPackomania(105, 500, 5, power, id);
-        DoPackomania(510, 1000, 10, power, id);
+    public void DoBigTests() throws IOException {
+        DoPackomania(5000, 0, "0");
+        DoPackomania(5000, 1.0/2.0, "1/2");
+        DoPackomania(5000, -1.0/2.0, "-1/2");
+        DoPackomania(5000, -2.0/3.0, "-2/3");
+        DoPackomania(5000, -1.0/5.0, "-1/5");
     }
 
-    public void DoPackomania(int from, int to, int step, double power, String id) throws IOException {
+    public void DoPackomaniaDefaultRanges(double power, String id) throws IOException {
+        DoPackomaniaRange(5, 100, 1, power, id);
+        DoPackomaniaRange(105, 500, 5, power, id);
+        DoPackomaniaRange(510, 1000, 10, power, id);
+    }
+
+    public void DoPackomaniaRange(int from, int to, int step, double power, String id) throws IOException {
         for(int i = from; i <= to; i += step) {
-            Problem p = new Problem(i, power);
-            DoAndWriteTest(p, "Packomania " + id + " (" + i + ")");
+            DoPackomania(i, power, id);
         }
+    }
+
+    public void DoPackomania(int count, double power, String id) throws IOException {
+        Problem p = new Problem(count, power);
+        DoAndWriteTest(p, "Packomania " + id + " (" + count + ")");
     }
 
     public void DoAndWriteTest(Problem problem, String id) throws IOException {

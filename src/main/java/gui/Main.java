@@ -24,7 +24,7 @@ public class Main {
 	public static void main(String args[]) throws IOException {
 
 		//Tester tester = new Tester();
-		//tester.DoAllTestsDefault();
+		//tester.DoBigTests();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,7 +34,7 @@ public class Main {
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
 				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				drawer.doSteps(2214); //-1 to completely solve
+				drawer.doSteps(-1); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -71,7 +71,7 @@ public class Main {
 		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
 		//Problem problem = new Problem(count,  1.0/2.0); // 5000 good result, but for some reason bigger overlap (e-15 rather than e-20 to e-22)
 		//Problem problem = new Problem(count, -1.0/2.0); // 5000 good result
-		Problem problem = new Problem(count, -2.0/3.0); // 5000 overlap problem !!! just after 2214 steps
+		Problem problem = new Problem(count, -2.0/3.0); // 5000 overlap problem !!! just after 2214 steps, requires 3 checks
 		//Problem problem = new Problem(count, -1.0/5.0); // 1000 good result. 5000 good too (1min)
 
 		// My problems: //untested for now
