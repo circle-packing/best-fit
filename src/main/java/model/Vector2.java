@@ -41,6 +41,11 @@ public class Vector2 {
 		return x*x + y*y;
 	}
 
+	static public double singedAngle(Vector2 from, Vector2 to) {
+		return Math.atan2(from.x * to.y - from.y * to.x, from.x * to.x + from.y * to.y);
+		//return Math.atan2(to.y, to.x) - Math.atan2(from.y, from.x);
+	}
+
 	public void normalize() {
 		double length = Math.sqrt(lengthSquared());
 		x /= length;

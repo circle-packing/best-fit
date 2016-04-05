@@ -23,8 +23,8 @@ public class Main {
 
 	public static void main(String args[]) throws IOException {
 
-		Tester tester = new Tester();
-		tester.DoAllTestsDefault();
+		//Tester tester = new Tester();
+		//tester.DoAllTestsDefault();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,7 +34,7 @@ public class Main {
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
 				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				drawer.doSteps(5107); //-1 to completely solve
+				drawer.doSteps(-1); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 

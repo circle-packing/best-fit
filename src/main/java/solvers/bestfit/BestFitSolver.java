@@ -189,18 +189,34 @@ public class BestFitSolver extends Solver {
 				circlesToPack.remove(loc.getCircle());
 				getSolution().add(loc);
 
-				// TODO add new hole
+				// Add new hole
 				holes.add(new NHole(first, second, loc));
 				// Extend shell
 				shell.add(secondIndex, loc);
+
+				// Check counter-clockwiseness
+				Vector2 relFirstPos = first.getPosition().minus(enclosingCircle.getPosition());
+				Vector2 relSecondPos = second.getPosition().minus(enclosingCircle.getPosition());
+				Vector2 relLocPos = loc.getPosition().minus(enclosingCircle.getPosition());
+				double angleFirst = Vector2.singedAngle(relFirstPos, relLocPos);
+				double angleSecond = Vector2.singedAngle(relLocPos, relSecondPos);
+				if (angleFirst < 0) {
+					LOG.warn("Angle First = " + angleFirst + ": " + relFirstPos + "->" + relLocPos);
+					shell.remove(first);
+				}
+				if (angleSecond < 0) {
+					LOG.warn("Angle Second = " + angleSecond + ": " + relLocPos + "->" + relSecondPos);
+					shell.remove(second);
+				}
 			}
 			else { //no success, now loc contains circle to remove
 				//Nothing fits, and never will
 				LOG.trace("Tried packing on shell, but nothing small enough. Updating shell...");
+				// Shrink the shell, depending on next/prev collision.
 				shell.remove(res.loc);
-				// TODO Shrink the shell, but how? Depending on next/prev collision?
 			}
 
+			// recalc enclosing circle if needed
 			if (!enclosingCircle.contains(res.loc)) {
 				enclosingCircle = Location.calculateEnclosingCircle(shell);
 			}
@@ -223,11 +239,12 @@ public class BestFitSolver extends Solver {
 	}
 
 	public void report() {
-		LOG.info("Overlap: " + getSolution().calculateOverlap());
-		LOG.info("NaN: " + getSolution().countNaN());
-		LOG.info("Packed " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles.");
-		LOG.info("" + circlesToPack.size() + " still need to be packed.");
-		LOG.info("Enclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
+		LOG.info(
+			  "\t\nOverlap: " + getSolution().calculateOverlap()
+			+ "\t\nNaN: " + getSolution().countNaN()
+			+ "\t\nPacked " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles."
+			+ "\t\n" + circlesToPack.size() + " still need to be packed."
+			+ "\t\nEnclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
 	}
 
 	public void startStepSolve() {
