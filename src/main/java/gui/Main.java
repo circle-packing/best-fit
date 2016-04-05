@@ -34,7 +34,7 @@ public class Main {
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
 				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				drawer.doSteps(-1); //-1 to completely solve
+				drawer.doSteps(755); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -69,9 +69,9 @@ public class Main {
 		int count = 2000;
 		// Packomania problems:
 		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
-		//Problem problem = new Problem(count,  1.0/2.0); //Bij 3000: eerste overlap na 1900, na 2940 ontsnapping, 5107 loopt shell mis
-		Problem problem = new Problem(count, -1.0/2.0); // 2000 bug, nan + overlap
-		//Problem problem = new Problem(count, -2.0/3.0); // 2000 overlap problem, but much smaller since counterclockwise check :D
+		//Problem problem = new Problem(count,  1.0/2.0); //Bij 3000: eerste overlap na 1900 -> check shell further
+		//Problem problem = new Problem(count, -1.0/2.0); // 2000 bug, small overlap -> check shell further
+		Problem problem = new Problem(count, -2.0/3.0); // 2000 overlap problem, just after 755 steps, looks like check-shell-further problem
 		//Problem problem = new Problem(count, -1.0/5.0); // 1000 good result. 5000 good too (1min)
 
 		// My problems:
