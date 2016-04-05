@@ -43,7 +43,18 @@ public class Vector2 {
 
 	static public double singedAngle(Vector2 from, Vector2 to) {
 		return Math.atan2(from.x * to.y - from.y * to.x, from.x * to.x + from.y * to.y);
-		//return Math.atan2(to.y, to.x) - Math.atan2(from.y, from.x);
+	}
+
+	static public boolean isInsideTriableBy(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p) {
+		// http://stackoverflow.com/questions/13300904/determine-whether-point-lies-inside-triangle
+
+		double alpha = ((p2.y - p3.y)*(p.x - p3.x) + (p3.x - p2.x)*(p.y - p3.y)) /
+				((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
+		double beta = ((p3.y - p1.y)*(p.x - p3.x) + (p1.x - p3.x)*(p.y - p3.y)) /
+				((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
+		double gamma = 1.0f - alpha - beta;
+
+		return alpha > 0 && beta > 0 && gamma > 0;
 	}
 
 	public void normalize() {

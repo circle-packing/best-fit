@@ -3,6 +3,8 @@ package solvers.bestfit;
 import model.Circle;
 import model.Location;
 import model.Vector2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
  * Created by Pablo on 07/12/15.
  */
 public class NHole {
+
+	static final Logger LOG = LoggerFactory.getLogger("default");
 
 	private List<Location> locations;
 
@@ -37,6 +41,18 @@ public class NHole {
 
 		// Try to place circle
 		Vector2 pos = Helpers.getMountPositionFor(cir, locations.get(0), locations.get(1));
+
+		// Check that is inside the hole
+		// assumes 3-hole
+		boolean inside = Vector2.isInsideTriableBy(
+				locations.get(0).getPosition(),
+				locations.get(1).getPosition(),
+				locations.get(2).getPosition(),
+				pos);
+		if (!inside) {
+			//LOG.warn("OUTSIDE!");
+			return null;
+		}
 
 		// Test for overlap
 		Location loc = new Location(pos, cir);
