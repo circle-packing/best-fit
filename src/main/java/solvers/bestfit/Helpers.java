@@ -3,6 +3,8 @@ package solvers.bestfit;
 import model.Circle;
 import model.Location;
 import model.Vector2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,12 +17,15 @@ public abstract class Helpers {
 
 	static public Vector2 getMountPositionFor(Circle cir, Location first, Location second) {
 		doClockwise = !doClockwise;
+		Vector2 result;
 		if (doClockwise) {
-			return getMountPositionForClockwise(cir, first, second);
+			result = getMountPositionForClockwise(cir, first, second);
 		}
 		else {
-			return getMountPositionForCounterClockwise(cir, second, first);
+			result = getMountPositionForCounterClockwise(cir, second, first);
 		}
+
+		return result;
 
 		/*Vector2 c = getMountPositionForClockwise(cir, first, second);
 		Vector2 cc = getMountPositionForCounterClockwise(cir, second, first);
