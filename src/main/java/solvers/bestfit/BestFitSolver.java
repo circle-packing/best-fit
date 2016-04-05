@@ -172,13 +172,17 @@ public class BestFitSolver extends Solver {
 			}
 
 			int prevIndex = (firstIndex+shell.size()-1) % shell.size();
+			int prevPrevIndex = (firstIndex+shell.size()-2) % shell.size();
 			Location prev = shell.get(prevIndex);
+			Location prevPrev = shell.get(prevPrevIndex);
 
 			int nextIndex = (secondIndex+1) % shell.size();
+			int nextNextIndex = (secondIndex+2) % shell.size();
 			Location next = shell.get(nextIndex);
+			Location nextNext = shell.get(nextNextIndex);
 
 			// Choose circle to pack
-			BestFitResult res = findBestFitFor(prev, first, second, next, circlesToPack);
+			BestFitResult res = findBestFitFor(prevPrev, prev, first, second, next, nextNext, circlesToPack);
 
 			if (res.success) { //loc contains position and circle to pack
 				Location loc = res.loc;
@@ -274,7 +278,28 @@ public class BestFitSolver extends Solver {
 	 * If success == true then loc is the bestfitting circle and it's pos.
 	 * If success == false then loc contains the circle (first/second) to be removed.
 	 */
-	private BestFitResult findBestFitFor(Location prev, Location first, Location second, Location next, List<Circle> sortedBigToSmall) {
+	private BestFitResult findBestFitFor(Location prevPrev, Location prev, Location first, Location second, Location next, Location nextNext, List<Circle> sortedBigToSmall) {
+		Location toRemove = null;
+
+		for (Circle cir : sortedBigToSmall) {
+			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+
+			Location loc = new Location(pos, cir);
+			if (loc.overlaps(prev) || loc.overlaps(prevPrev)) {
+				toRemove = first;
+			}
+			else if (loc.overlaps(next) || loc.overlaps(nextNext)) {
+				toRemove = second;
+			}
+			else {
+				return new BestFitResult(true, loc);
+			}
+		}
+		return new BestFitResult(false, toRemove);
+	}
+
+
+	private BestFitResult findBestFitForOne(Location prev, Location first, Location second, Location next, List<Circle> sortedBigToSmall) {
 		Location toRemove = null;
 
 		for (Circle cir : sortedBigToSmall) {
