@@ -66,12 +66,12 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 3000;
+		int count = 2000;
 		// Packomania problems:
 		//Problem problem = new Problem(count, 0); // 5000 good result (1min)
-		Problem problem = new Problem(count,  1.0/2.0); //Bij 3000: eerste overlap na 1900, na 2940 ontsnapping, 5107 loopt shell mis
-		//Problem problem = new Problem(count, -1.0/2.0);
-		//Problem problem = new Problem(count, -2.0/3.0); //2000 overlap problem
+		//Problem problem = new Problem(count,  1.0/2.0); //Bij 3000: eerste overlap na 1900, na 2940 ontsnapping, 5107 loopt shell mis
+		Problem problem = new Problem(count, -1.0/2.0); // 2000 bug, nan + overlap
+		//Problem problem = new Problem(count, -2.0/3.0); // 2000 overlap problem, but much smaller since counterclockwise check :D
 		//Problem problem = new Problem(count, -1.0/5.0); // 1000 good result. 5000 good too (1min)
 
 		// My problems:

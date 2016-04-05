@@ -201,11 +201,11 @@ public class BestFitSolver extends Solver {
 				double angleFirst = Vector2.singedAngle(relFirstPos, relLocPos);
 				double angleSecond = Vector2.singedAngle(relLocPos, relSecondPos);
 				if (angleFirst < 0) {
-					LOG.warn("Angle First = " + angleFirst + ": " + relFirstPos + "->" + relLocPos);
+					LOG.trace("Angle First Is Neg = " + angleFirst + ": " + relFirstPos + "->" + relLocPos);
 					shell.remove(first);
 				}
 				if (angleSecond < 0) {
-					LOG.warn("Angle Second = " + angleSecond + ": " + relLocPos + "->" + relSecondPos);
+					LOG.trace("Angle Second Is Neg = " + angleSecond + ": " + relLocPos + "->" + relSecondPos);
 					shell.remove(second);
 				}
 			}
