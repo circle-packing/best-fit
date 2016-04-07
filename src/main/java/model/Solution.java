@@ -36,6 +36,23 @@ public class Solution {
 		return overlap;
 	}
 
+	public double calculateOverlapRadius() {
+		double overlap = 0;
+		for (int i = 0; i < locations.size(); ++i) {
+			Location loci = locations.get(i);
+			for (int j = i+1; j < locations.size(); ++j) {
+				Location locj = locations.get(j);
+				double distance = loci.getPosition().distanceTo(locj.getPosition());
+				double combinedRadius = loci.getCircle().getRadius() + locj.getCircle().getRadius();
+
+				if (distance < combinedRadius) {
+					overlap += combinedRadius - distance;
+				}
+			}
+		}
+		return overlap;
+	}
+
 	public int countNaN() {
 		int count = 0;
 		for (Location loc : locations) {
