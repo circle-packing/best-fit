@@ -171,22 +171,8 @@ public class BestFitSolver extends Solver {
 				}
 			}
 
-			int prevIndex = (firstIndex+shell.size()-1) % shell.size();
-			int prev2Index = (firstIndex+shell.size()-2) % shell.size();
-			int prev3Index = (firstIndex+shell.size()-3) % shell.size();
-			Location prev = shell.get(prevIndex);
-			Location prev2 = shell.get(prev2Index);
-			Location prev3 = shell.get(prev3Index);
-
-			int nextIndex = (secondIndex+1) % shell.size();
-			int next2Index = (secondIndex+2) % shell.size();
-			int next3Index = (secondIndex+3) % shell.size();
-			Location next = shell.get(nextIndex);
-			Location next2 = shell.get(next2Index);
-			Location next3 = shell.get(next3Index);
-
 			// Choose circle to pack
-			BestFitResult res = findBestFitFor(prev3, prev2, prev, first, second, next, next2, next3, circlesToPack);
+			BestFitResult res = findBestFitFor(firstIndex, secondIndex, 3, shell, circlesToPack);
 
 			if (res.success) { //loc contains position and circle to pack
 				Location loc = res.loc;
@@ -284,10 +270,13 @@ public class BestFitSolver extends Solver {
 	 * If success == false then loc contains the circle (first/second) to be removed.
 	 */
 	private BestFitResult findBestFitFor(
-			Location prev3, Location prev2, Location prev,
-			Location first, Location second,
-			Location next, Location next2, Location next3,
+			int firstIndex, int secondIndex,
+			int checkRadius,
+			List<Location> shell,
 			List<Circle> sortedBigToSmall) {
+		Location first = shell.get(firstIndex);
+		Location second = shell.get(secondIndex);
+
 		Location toRemove = null;
 
 		for (Circle cir : sortedBigToSmall) {
@@ -302,73 +291,28 @@ public class BestFitSolver extends Solver {
 					toRemove = second;
 				}
 			}
-			else if (loc.overlaps(prev) || loc.overlaps(prev2) || loc.overlaps(prev3)) {
-				toRemove = first;
-			}
-			else if (loc.overlaps(next) || loc.overlaps(next2) || loc.overlaps(next3)) {
-				toRemove = second;
-			}
 			else {
-				return new BestFitResult(true, loc);
+				boolean allOk = true;
+				for(int i = 1; i <= checkRadius && allOk; ++i) {
+					int prevIndex = (firstIndex+shell.size()-i) % shell.size();
+					Location prev = shell.get(prevIndex);
+					if (loc.overlaps(prev)) {
+						allOk = false;
+						toRemove = first;
+						break;
+					}
+					int nextIndex = (secondIndex+i) % shell.size();
+					Location next = shell.get(nextIndex);
+					if (loc.overlaps(next)) {
+						allOk = false;
+						toRemove = second;
+						break;
+					}
+				}
+				if (allOk) {
+					return new BestFitResult(true, loc);
+				}
 			}
-		}
-		return new BestFitResult(false, toRemove);
-	}
-
-
-	private BestFitResult findBestFitForTwo(Location prevPrev, Location prev, Location first, Location second, Location next, Location nextNext, List<Circle> sortedBigToSmall) {
-		Location toRemove = null;
-
-		for (Circle cir : sortedBigToSmall) {
-			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
-
-			Location loc = new Location(pos, cir);
-			if (loc.overlaps(prev) || loc.overlaps(prevPrev)) {
-				toRemove = first;
-			}
-			else if (loc.overlaps(next) || loc.overlaps(nextNext)) {
-				toRemove = second;
-			}
-			else {
-				return new BestFitResult(true, loc);
-			}
-		}
-		return new BestFitResult(false, toRemove);
-	}
-
-	private BestFitResult findBestFitForOne(Location prev, Location first, Location second, Location next, List<Circle> sortedBigToSmall) {
-		Location toRemove = null;
-
-		for (Circle cir : sortedBigToSmall) {
-			Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
-
-			Location loc = new Location(pos, cir);
-			if (loc.overlaps(prev)) {
-				toRemove = first;
-			}
-			else if (loc.overlaps(next)) {
-				toRemove = second;
-			}
-			else {
-				return new BestFitResult(true, loc);
-			}
-		}
-		return new BestFitResult(false, toRemove);
-	}
-
-	private BestFitResult findBestFitFor(Circle cir, Location prev, Location first, Location second, Location next) {
-		Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
-		Location toRemove = null;
-
-		Location loc = new Location(pos, cir);
-		if (loc.overlaps(prev)) {
-			toRemove = first;
-		}
-		else if (loc.overlaps(next)) {
-			toRemove = second;
-		}
-		else {
-			return new BestFitResult(true, loc);
 		}
 		return new BestFitResult(false, toRemove);
 	}
