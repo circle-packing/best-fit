@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import solvers.Solver;
 import solvers.bestfit.BestFitSolver;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Pablo on 31/03/16.
@@ -35,6 +35,36 @@ public class Tester {
         writer = new BufferedWriter(new FileWriter(filename));
 
         WriteInfoHeader();
+    }
+
+    public void NRIRPackomaniaTests() throws IOException {
+        StartNewFile("Packomania NR and IN");
+
+        AddProblemsFromFile("NR Problems.txt");
+        AddProblemsFromFile("IN Problems.txt");
+    }
+
+    private void AddProblemsFromFile(String filename) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String line = null;
+        while((line = reader.readLine()) != null) {
+            String[] info = line.split(";");
+
+            String id = info[0].trim();
+            int count = Integer.parseInt(info[1].trim());
+
+            String[] problemStrings = info[2].split(",");
+            double[] problem = new double[problemStrings.length];
+            for(int i = 0; i < problemStrings.length; ++i) {
+                problem[i] = Double.parseDouble(problemStrings[i].trim());
+            }
+
+            if (count != problem.length) {
+                LOG.error("Count in file doesn't match the number of radii: " + id + ", " + count + "=/=" + problem.length);
+            }
+
+            DoAndWriteTest(new Problem(problem), id + " (" + count + ")");
+        }
     }
 
     public void DoPackomaniaEqualSizeTests() throws IOException {
