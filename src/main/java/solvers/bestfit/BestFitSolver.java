@@ -29,8 +29,15 @@ public class BestFitSolver extends Solver {
 
 	static final Logger LOG = LoggerFactory.getLogger("default");
 
+	private int numberOfShellChecks = 3;
+
 	public BestFitSolver(Problem problem) {
+		this(problem, 3);
+	}
+
+	public BestFitSolver(Problem problem, int numberOfShellChecks) {
 		super(problem);
+		this.numberOfShellChecks = numberOfShellChecks;
 	}
 
 	private void init() {
@@ -172,7 +179,7 @@ public class BestFitSolver extends Solver {
 			}
 
 			// Choose circle to pack
-			BestFitResult res = findBestFitFor(firstIndex, secondIndex, 3, shell, circlesToPack);
+			BestFitResult res = findBestFitFor(firstIndex, secondIndex, numberOfShellChecks, shell, circlesToPack);
 
 			if (res.success) { //loc contains position and circle to pack
 				Location loc = res.loc;
