@@ -37,13 +37,18 @@ public class Tester {
         WriteInfoHeader();
     }
 
-    public void DoPackomaniaTests() throws IOException {
-        StartNewFile("Packomania");
-        DoPackomaniaRange(5, 100, 1, 0, "0");
+    public void DoPackomaniaEqualSizeTests() throws IOException {
+        StartNewFile("Packomania Equal");
+        DoPackomaniaRange(5, 2604, 1, 0.0, "Equal");
+    }
+
+    public void DoPackomaniaPowerTests() throws IOException {
+        StartNewFile("Packomania Power");
+        DoPackomaniaRange(5, 200, 1, 1.0, "1");
         DoPackomaniaRange(5, 100, 1, 1.0/2.0, "1/2");
         DoPackomaniaRange(5, 100, 1, -1.0/2.0, "-1/2");
-        DoPackomaniaRange(5, 100, 1, -2.0/3.0, "-2/3");
-        DoPackomaniaRange(5, 100, 1, -1.0/5.0, "-1/5");
+        DoPackomaniaRange(5, 60, 1, -2.0/3.0, "-2/3");
+        DoPackomaniaRange(5, 64, 1, -1.0/5.0, "-1/5");
     }
 
     public void DoDefaultTests() throws IOException {

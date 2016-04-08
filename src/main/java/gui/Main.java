@@ -26,7 +26,7 @@ public class Main {
 		Tester tester = new Tester();
 		//tester.DoDefaultTests();
 		//tester.DoBigTests();
-		tester.DoPackomaniaTests();
+		tester.DoPackomaniaPowerTests();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
