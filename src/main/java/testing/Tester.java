@@ -25,25 +25,38 @@ public class Tester {
 
     BufferedWriter writer;
 
-    public Tester() throws IOException {
+    public Tester() { }
+
+    public void StartNewFile(String prefix) throws IOException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Date date = new Date();
 
-        String filename = "Results " + format.format(date) + ".csv";
+        String filename = prefix + " " + format.format(date) + ".csv";
         writer = new BufferedWriter(new FileWriter(filename));
 
         WriteInfoHeader();
     }
 
+    public void DoPackomaniaTests() throws IOException {
+        StartNewFile("Packomania");
+        DoPackomaniaRange(5, 100, 1, 0, "0");
+        DoPackomaniaRange(5, 100, 1, 1.0/2.0, "1/2");
+        DoPackomaniaRange(5, 100, 1, -1.0/2.0, "-1/2");
+        DoPackomaniaRange(5, 100, 1, -2.0/3.0, "-2/3");
+        DoPackomaniaRange(5, 100, 1, -1.0/5.0, "-1/5");
+    }
+
     public void DoDefaultTests() throws IOException {
-        DoPackomaniaDefaultRanges(0, "0");
-        DoPackomaniaDefaultRanges(1.0/2.0, "1/2");
-        DoPackomaniaDefaultRanges(-1.0/2.0, "-1/2");
-        DoPackomaniaDefaultRanges(-2.0/3.0, "-2/3");
-        DoPackomaniaDefaultRanges(-1.0/5.0, "-1/5");
+        StartNewFile("Packomania");
+        DoPackomaniaMyRanges(0, "0");
+        DoPackomaniaMyRanges(1.0/2.0, "1/2");
+        DoPackomaniaMyRanges(-1.0/2.0, "-1/2");
+        DoPackomaniaMyRanges(-2.0/3.0, "-2/3");
+        DoPackomaniaMyRanges(-1.0/5.0, "-1/5");
     }
 
     public void DoBigTests() throws IOException {
+        StartNewFile("Packomania");
         DoPackomania(5000, 0, "0");
         DoPackomania(5000, 1.0/2.0, "1/2");
         DoPackomania(5000, -1.0/2.0, "-1/2");
@@ -51,7 +64,7 @@ public class Tester {
         DoPackomania(5000, -1.0/5.0, "-1/5");
     }
 
-    public void DoPackomaniaDefaultRanges(double power, String id) throws IOException {
+    public void DoPackomaniaMyRanges(double power, String id) throws IOException {
         DoPackomaniaRange(5, 100, 1, power, id);
         DoPackomaniaRange(105, 500, 5, power, id);
         DoPackomaniaRange(510, 1000, 10, power, id);
