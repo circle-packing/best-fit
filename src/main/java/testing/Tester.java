@@ -37,7 +37,7 @@ public class Tester {
         WriteInfoHeader();
     }
 
-    public void NRIRPackomaniaTests() throws IOException {
+    public void DoNRIRPackomaniaTests() throws IOException {
         StartNewFile("Packomania NR and IN");
 
         AddProblemsFromFile("NR Problems.txt");
