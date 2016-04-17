@@ -262,13 +262,55 @@ public class BestFitSolver extends Solver {
 	}
 
 	private Location findBestFitFor(NHole hole, List<Circle> sortedBigToSmall) {
-		for (Circle cir : sortedBigToSmall) {
+		/*for (Circle cir : sortedBigToSmall) {
 			Vector2 pos = hole.tryFit(cir);
 			if (pos != null) {
 				return new Location(pos, cir);
 			}
 		}
-		return null;
+		return null;*/
+
+		//Try smallest
+		int lower = sortedBigToSmall.size() - 1;
+		Circle smallestCir = sortedBigToSmall.get(lower);
+		Vector2 smallestPos = hole.tryFit(smallestCir);
+		if (smallestPos == null) {
+			return null;
+		}
+
+		// Try biggest
+		int upper = 0;
+		Circle biggestCir = sortedBigToSmall.get(upper);
+		Vector2 biggestPos = hole.tryFit(biggestCir);
+		if (biggestPos != null) {
+			return new Location(biggestPos, biggestCir);
+		}
+
+		// Log search
+		Circle cir = null;
+		Vector2 pos = null;
+		while (lower - upper > 1) {
+			int middle = (upper + lower) / 2;
+			cir = sortedBigToSmall.get(middle);
+			pos = hole.tryFit(cir);
+
+			if (pos == null) {
+				upper = middle;
+			}
+			else {
+				lower = middle;
+			}
+			//LOG.warn("HOLE: " + upper + " - " + middle + " - " + lower);
+		}
+
+		cir = sortedBigToSmall.get(lower);
+		pos = hole.tryFit(cir);
+		if (pos != null) {
+			return new Location(pos, cir);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -277,6 +319,92 @@ public class BestFitSolver extends Solver {
 	 * If success == false then loc contains the circle (first/second) to be removed.
 	 */
 	private BestFitResult findBestFitFor(
+			int firstIndex, int secondIndex,
+			int checkRadius,
+			List<Location> shell,
+			List<Circle> sortedBigToSmall) {
+		Location first = shell.get(firstIndex);
+		Location second = shell.get(secondIndex);
+
+		Circle cir;
+		Vector2 pos;
+		Location toRemove;
+		Location loc;
+
+		// Try smallest
+		int lower = sortedBigToSmall.size() - 1;
+		cir = sortedBigToSmall.get(lower);
+		pos = Helpers.getMountPositionFor(cir, first, second);
+		loc = new Location(pos, cir);
+		toRemove = testShellOverlap(first, firstIndex, second, secondIndex, loc, checkRadius, shell);
+		if (toRemove != null) { //smallest doesn't fit
+			return new BestFitResult(false, toRemove);
+		}
+
+		// Try biggest
+		int upper = 0;
+		cir = sortedBigToSmall.get(upper);
+		pos = Helpers.getMountPositionFor(cir, first, second);
+		loc = new Location(pos, cir);
+		toRemove = testShellOverlap(first, firstIndex, second, secondIndex, loc, checkRadius, shell);
+		if (toRemove == null) { //biggest fits!
+			return new BestFitResult(true, loc);
+		}
+
+		// LOG search
+		while (lower - upper > 1) {
+			int middle = (upper + lower) / 2;
+			cir = sortedBigToSmall.get(middle);
+			pos = Helpers.getMountPositionFor(cir, first, second);
+			loc = new Location(pos, cir);
+			toRemove = testShellOverlap(first, firstIndex, second, secondIndex, loc, checkRadius, shell);
+			if (toRemove == null) {
+				lower = middle;
+			}
+			else {
+				upper = middle;
+			}
+			//LOG.warn("SHELL: " + upper + " - " + middle + " - " + lower);
+		}
+		cir = sortedBigToSmall.get(lower);
+		pos = Helpers.getMountPositionFor(cir, first, second);
+		loc = new Location(pos, cir);
+		return new BestFitResult(true, loc);
+	}
+	private Location testShellOverlap(
+			Location first, int firstIndex, Location second, int secondIndex,
+			Location loc, int checkRadius, List<Location> shell
+	) {
+		Location toRemove = null;
+
+		if (Double.isNaN(loc.getPosition().getX()) || Double.isNaN(loc.getPosition().getY())) {
+			if (first.getCircle().getRadius() < second.getCircle().getRadius()) {
+				toRemove = first;
+			}
+			else {
+				toRemove = second;
+			}
+		}
+		else {
+			for (int i = 1; i <= checkRadius; ++i) {
+				int prevIndex = (firstIndex + shell.size() - i) % shell.size();
+				Location prev = shell.get(prevIndex);
+				if (loc.overlaps(prev)) {
+					toRemove = first;
+					break;
+				}
+				int nextIndex = (secondIndex + i) % shell.size();
+				Location next = shell.get(nextIndex);
+				if (loc.overlaps(next)) {
+					toRemove = second;
+					break;
+				}
+			}
+		}
+		return toRemove;
+	}
+
+	private BestFitResult findBestFitFor_linear(
 			int firstIndex, int secondIndex,
 			int checkRadius,
 			List<Location> shell,
