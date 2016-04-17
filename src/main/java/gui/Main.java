@@ -24,9 +24,9 @@ public class Main {
 	public static void main(String args[]) throws IOException {
 
 		Tester tester = new Tester();
-		tester.DoNRIRPackomaniaTests();
-		tester.DoPackomaniaPowerTests();
-		tester.DoPackomaniaEqualSizeTests();
+		//tester.DoNRIRPackomaniaTests();
+		//tester.DoPackomaniaPowerTests();
+		//tester.DoPackomaniaEqualSizeTests();
 		//tester.DoDefaultTests();
 
 		EventQueue.invokeLater(new Runnable() {
@@ -37,7 +37,7 @@ public class Main {
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
 				StepSolverDrawer drawer = new StepSolverDrawer(getStepSolver());
-				//drawer.doSteps(-1); //-1 to completely solve
+				drawer.doSteps(-1); //-1 to completely solve
 
 				drawer.setOffset(new Vector2(frame.getWidth() / 2, frame.getHeight() / 2));
 
@@ -71,25 +71,11 @@ public class Main {
 	private static Problem getProblem() {
 		int count = 5000;
 		// Packomania problems:
-		Problem problem = new Problem(count, 0); // 5000 good result
-		//Problem problem = new Problem(count,  1.0/2.0); // 5000 good result
+		//Problem problem = new Problem(count, 0); // 5000 good result
+		Problem problem = new Problem(count,  1.0/2.0); // 5000 good result
 		//Problem problem = new Problem(count, -1.0/2.0); // 5000 good result
 		//Problem problem = new Problem(count, -2.0/3.0); // 5000 good result
 		//Problem problem = new Problem(count, -1.0/5.0); // 5000 good result
-
-		// My problems: //untested for now
-		//Problem problem = new Problem(count,  -1.5);
-		//Problem problem = new Problem(count,  -1.1);
-		//Problem problem = new Problem(count,  -1.01);
-		//Problem problem = new Problem(count,  -1);
-		//Problem problem = new Problem(count,  -0.95);
-		//Problem problem = new Problem(count,  -0.9);
-		//Problem problem = new Problem(count,  -0.85);
-		//Problem problem = new Problem(count,  -0.8);
-		//Problem problem = new Problem(count,  -0.75);
-		//Problem problem = new Problem(count,  -0.7);
-		//Problem problem = new Problem(count,  -0.6);
-
 		return problem;
 	}
 
