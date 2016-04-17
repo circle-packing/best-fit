@@ -109,6 +109,8 @@ public class Tester {
         DoPackomaniaRange(5, 100, 1, power, id);
         DoPackomaniaRange(105, 500, 5, power, id);
         DoPackomaniaRange(510, 1000, 10, power, id);
+        DoPackomaniaRange(1100, 2000, 100, power, id);
+        DoPackomaniaRange(3000, 5000, 1000, power, id);
     }
 
     public void DoPackomaniaRange(int from, int to, int step, double power, String id) throws IOException {
