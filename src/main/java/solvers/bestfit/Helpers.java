@@ -33,7 +33,6 @@ public abstract class Helpers {
 	}
 
 	static public Vector2 getMountPositionForClockwise(Circle cir, Location first, Location second) {
-		// from: http://stackoverflow.com/questions/3349125/circle-circle-intersection-points
 		double x0 = first.getPosition().getX();
 		double y0 = first.getPosition().getY();
 		double r0 = first.getCircle().getRadius() + cir.getRadius();
@@ -85,7 +84,6 @@ public abstract class Helpers {
 	}
 
 	static public Vector2 getMountPositionForCounterClockwise(Circle cir, Location first, Location second) {
-		// from: http://stackoverflow.com/questions/3349125/circle-circle-intersection-points
 		double x0 = first.getPosition().getX();
 		double y0 = first.getPosition().getY();
 		double r0 = first.getCircle().getRadius() + cir.getRadius();
