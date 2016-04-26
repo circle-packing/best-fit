@@ -21,7 +21,7 @@ public class BestFitSolver extends Solver {
 
 	private List<Circle> circlesToPack; //The remaining circles to pack, for all see the Problem
 
-	private Queue<NHole> holes;
+	private Queue<Hole> holes;
 
 	private List<Location> shell;
 
@@ -89,7 +89,7 @@ public class BestFitSolver extends Solver {
 		circlesToPack.remove(third);
 
 		// Create first hole
-		holes.add(new NHole(firstLoc, secondLoc, thirdLoc));
+		holes.add(new Hole(firstLoc, secondLoc, thirdLoc));
 		// Create the initial shell
 		// IMPORTANT: must be clock-wise
 		shell.add(firstLoc);
@@ -125,7 +125,7 @@ public class BestFitSolver extends Solver {
 		}
 
 		if(!holes.isEmpty()) {
-			NHole toFill = holes.remove(); //removes the hole, so remembers we already handled it
+			Hole toFill = holes.remove(); //removes the hole, so remembers we already handled it
 			// IMPORTANT: circlesToPlace must be ordered big to small!
 			Location bestFit = findBestFitFor(toFill, circlesToPack);
 
@@ -143,10 +143,10 @@ public class BestFitSolver extends Solver {
 			circlesToPack.remove(bestFit.getCircle());
 
 			//create new holes
-			for (int i = 0; i < toFill.getLocations().size(); ++i) {
-				int j = (i+1)%toFill.getLocations().size();
-				holes.add(new NHole(bestFit, toFill.getLocations().get(i), toFill.getLocations().get(j)));
-			}
+			// make sure they are counterclockwise
+			holes.add(new Hole(bestFit, toFill.getFirst(), toFill.getSecond()));
+			holes.add(new Hole(bestFit, toFill.getSecond(), toFill.getThird()));
+			holes.add(new Hole(bestFit, toFill.getThird(), toFill.getFirst()));
 		}
 		else if (!shell.isEmpty()) {
 			// Find closest mount on the shell to 0,0 //DONE Closest to round-circle center
@@ -191,7 +191,7 @@ public class BestFitSolver extends Solver {
 				getSolution().add(loc);
 
 				// Add new hole
-				holes.add(new NHole(first, second, loc));
+				holes.add(new Hole(first, second, loc));
 				// Extend shell
 				shell.add(secondIndex, loc);
 
@@ -261,7 +261,7 @@ public class BestFitSolver extends Solver {
 		return bestFitStep();
 	}
 
-	private Location findBestFitFor(NHole hole, List<Circle> sortedBigToSmall) {
+	private Location findBestFitFor(Hole hole, List<Circle> sortedBigToSmall) {
 		/*for (Circle cir : sortedBigToSmall) {
 			Vector2 pos = hole.tryFit(cir);
 			if (pos != null) {
@@ -521,30 +521,30 @@ public class BestFitSolver extends Solver {
 		// Draw holes
 		g2.setColor(new Color(255,0,0, 80));
 		g2.setStroke(new BasicStroke((float)(1.5 / g2.getTransform().getScaleX())));
-		for (NHole hole : holes) {
-			List<Location> locs = hole.getLocations();
+		for (Hole hole : holes) {
+			GeneralPath holeLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 3);
+			holeLine.moveTo(hole.getThird().getPosition().getX(), hole.getThird().getPosition().getY());
 
-			GeneralPath holeLine = new GeneralPath(GeneralPath.WIND_EVEN_ODD, locs.size());
-			Location last = locs.get(locs.size()-1);
-			Vector2 lastPos = last.getPosition();
-			holeLine.moveTo(lastPos.getX(), lastPos.getY());
+			Vector2 pos = hole.getFirst().getPosition();
+			double x = Double.isNaN(pos.getX()) ? 0 : pos.getX();
+			double y = Double.isNaN(pos.getY()) ? 0 : pos.getY();
+			holeLine.lineTo(x, y);
 
-			for (Location loc : locs) {
-				Vector2 pos = loc.getPosition();
-				double x = pos.getX();
-				double y = pos.getY();
-				if (Double.isNaN(x)) x = 0;
-				if (Double.isNaN(y)) y = 0;
-				holeLine.lineTo(x, y);
-			}
+			pos = hole.getSecond().getPosition();
+			x = Double.isNaN(pos.getX()) ? 0 : pos.getX();
+			y = Double.isNaN(pos.getY()) ? 0 : pos.getY();
+			holeLine.lineTo(x, y);
+
+			pos = hole.getThird().getPosition();
+			x = Double.isNaN(pos.getX()) ? 0 : pos.getX();
+			y = Double.isNaN(pos.getY()) ? 0 : pos.getY();
+			holeLine.lineTo(x, y);
 
 
-
-			Vector2 center = new Vector2(0,0);
-			for (Location loc : locs) {
-				center = center.plus(loc.getPosition());
-			}
-			center = center.times(1.0/locs.size());
+			Vector2 center = hole.getFirst().getPosition();
+			center = center.plus(hole.getSecond().getPosition());
+			center = center.plus(hole.getThird().getPosition());
+			center = center.times(1.0/3.0);
 
 			AffineTransform tr = new AffineTransform();
 			double scale = 0.8;
