@@ -88,7 +88,6 @@ public class Tester {
     public void DoDefaultTests() throws IOException {
         StartNewFile("Packomania");
         AddPackomaniaMyRanges(0, "0");
-        AddPackomaniaMyRanges(1, "1");
         AddPackomaniaMyRanges(1.0/2.0, "1/2");
         AddPackomaniaMyRanges(-1.0/2.0, "-1/2");
         AddPackomaniaMyRanges(-2.0/3.0, "-2/3");
