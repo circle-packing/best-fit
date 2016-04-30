@@ -39,20 +39,20 @@ public class Hole {
 
 		// Try to place circle
 		Vector2 pos = Helpers.getMountPositionFor(cir, first, second);
+		Location loc = new Location(pos, cir);
+
+		// Test for overlap
+		if (third.overlaps(loc)) {
+			return null;
+		}
 
 		// Check that is inside the hole
-		boolean inside = Vector2.isInsideTriableBy(
+		boolean inside = Vector2.isInsideTriangleBy(
 				first.getPosition(),
 				second.getPosition(),
 				third.getPosition(),
 				pos);
 		if (!inside) {
-			return null;
-		}
-
-		// Test for overlap
-		Location loc = new Location(pos, cir);
-		if (third.overlaps(loc)) {
 			return null;
 		}
 		return pos;

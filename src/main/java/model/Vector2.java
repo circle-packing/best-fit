@@ -45,7 +45,7 @@ public class Vector2 {
 		return Math.atan2(from.x * to.y - from.y * to.x, from.x * to.x + from.y * to.y);
 	}
 
-	static public boolean isInsideTriableBy(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p) {
+	static public boolean isInsideTriangleBy(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p) {
 		// http://stackoverflow.com/questions/13300904/determine-whether-point-lies-inside-triangle
 
 		double alpha = ((p2.y - p3.y)*(p.x - p3.x) + (p3.x - p2.x)*(p.y - p3.y)) /
@@ -56,7 +56,7 @@ public class Vector2 {
 
 		return alpha > 0 && beta > 0 && gamma > 0;
 	}
-
+	
 	public void normalize() {
 		double length = Math.sqrt(lengthSquared());
 		x /= length;
