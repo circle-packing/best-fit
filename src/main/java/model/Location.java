@@ -86,6 +86,8 @@ public class Location {
 
 	private static Location recursiveWelzl(Location[] points, int n, Location[] boundary, int b)
 	{
+		//based on http://www.sunshine2k.de/coding/java/Welzl/Welzl.html
+
 		Location localCircle = null;
 
 		// terminal cases
@@ -173,8 +175,8 @@ public class Location {
 			// from http://mathforum.org/library/drmath/view/54785.html
 			double a = (Math.acos((rr0 + (d * d) - rr1) / (2 * r0 * d))) * 2;
 			double b = (Math.acos((rr1 + (d * d) - rr0) / (2 * r1 * d))) * 2;
-			double area1 = 0.5 * b * rr1 - 0.5 * rr1 * Math.sin(b);
-			double area2 = 0.5 * a * rr0 - 0.5 * rr0 * Math.sin(a);
+			double area1 = Math.abs(0.5 * b * rr1 - 0.5 * rr1 * Math.sin(b));
+			double area2 = Math.abs(0.5 * a * rr0 - 0.5 * rr0 * Math.sin(a));
 			double overlap = area1 + area2;
 
 			if (Double.isNaN(overlap)) { // NaN if no overlap
