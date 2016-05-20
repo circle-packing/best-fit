@@ -14,7 +14,7 @@ public class Drawer extends JPanel implements MouseListener, MouseMotionListener
 
 	private Vector2 mousePosDown;
 	private Vector2 offset = new Vector2(0, 0);
-	private double scale = 50;
+	private double scale = 0.1;
 	private Vector2 mousePos = new Vector2(0, 0);
 
 	public Drawer() {
