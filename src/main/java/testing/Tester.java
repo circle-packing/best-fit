@@ -95,12 +95,12 @@ public class Tester {
     }
 
     public void DoBigTests() throws IOException {
-        StartNewFile("Packomania");
-        AddPackomania(5000, 0, "0");
-        AddPackomania(5000, 1.0/2.0, "1/2");
-        AddPackomania(5000, -1.0/2.0, "-1/2");
-        AddPackomania(5000, -2.0/3.0, "-2/3");
-        AddPackomania(5000, -1.0/5.0, "-1/5");
+        StartNewFile("Packomania Big");
+        AddPackomaniaBigRanges(0, "0");
+        AddPackomaniaBigRanges(1.0/2.0, "1/2");
+        AddPackomaniaBigRanges(-1.0/2.0, "-1/2");
+        AddPackomaniaBigRanges(-2.0/3.0, "-2/3");
+        AddPackomaniaBigRanges(-1.0/5.0, "-1/5");
     }
 
     public void DoDoublingTests() throws IOException {
@@ -129,6 +129,13 @@ public class Tester {
         AddPackomaniaRange(3000, 5000, 1000, power, id);
     }
 
+    public void AddPackomaniaBigRanges(double power, String id) throws IOException {
+        AddPackomaniaRange(100, 500, 5, power, id);
+        AddPackomaniaRange(510, 1000, 10, power, id);
+        AddPackomaniaRange(1100, 2000, 100, power, id);
+        AddPackomaniaRange(3000, 14000, 1000, power, id);
+    }
+
     public void AddPackomaniaRange(int from, int to, int step, double power, String id) throws IOException {
         for(int i = from; i <= to; i += step) {
             AddPackomania(i, power, id);
@@ -141,23 +148,26 @@ public class Tester {
     }
 
     public void RunAndWriteTest(Problem problem, String id) throws IOException {
-        long totalns = 0;
+        long bestns = Long.MAX_VALUE;
         Solver solver = null;
         int testCount = 5;
+
         for (int i = 0; i < testCount; ++i) {
             solver = new BestFitSolver(problem);
 
             long startTime = System.nanoTime();
             solver.solve();
             long endTime = System.nanoTime();
+
             long ns = (endTime - startTime);
             long s = ns / 1000000000;
             long ms = (ns % 1000000000)/1000000;
 
             LOG.info("Ran multi-test " + i + " of " + testCount + ": " + id + "; " + s + "s:" + ms + "ms");
-            totalns += ns;
+
+            if (bestns > ns) bestns = ns;
         }
-        long ns = totalns / testCount;
+        long ns = bestns;
         Solution sol = solver.getSolution();
 
         int circleCount = problem.getCircles().size();
