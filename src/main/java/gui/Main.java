@@ -66,13 +66,13 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 500;
+		int count = 500; // 3 to 5000 works, though higher also works though visualization isn't great
 		// Packomania problems:
-		//Problem problem = new Problem(count, 0); // 5000 good result
-		//Problem problem = new Problem(count,  1.0/2.0); // 5000 good result
-		//Problem problem = new Problem(count, -1.0/2.0); // 5000 good result
-		Problem problem = new Problem(count, -2.0/3.0); // 5000 good result
-		//Problem problem = new Problem(count, -1.0/5.0); // 5000 good result
+		//Problem problem = new Problem(count, 0);
+		//Problem problem = new Problem(count,  1.0/2.0);
+		//Problem problem = new Problem(count, -1.0/2.0);
+		Problem problem = new Problem(count, -2.0/3.0);
+		//Problem problem = new Problem(count, -1.0/5.0);
 		return problem;
 	}
 
