@@ -23,16 +23,13 @@ public class Main {
 
 	public static void main(String args[]) throws IOException {
 
-		Tester tester = new Tester();
-		//tester.DoNRIRPackomaniaTests();
+		//Tester tester = new Tester();
 		//tester.DoPackomaniaPowerTests();
-		//tester.DoPackomaniaEqualSizeTests();
-		//tester.DoDefaultTests();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame = new JFrame("Circle Packing");
-				frame.setSize(800, 600);
+				frame.setSize(800, 800);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 				//Drawer drawer = new SolutionDrawer(getSolution());
@@ -69,12 +66,12 @@ public class Main {
 	}
 
 	private static Problem getProblem() {
-		int count = 5000;
+		int count = 500;
 		// Packomania problems:
 		//Problem problem = new Problem(count, 0); // 5000 good result
-		Problem problem = new Problem(count,  1.0/2.0); // 5000 good result
+		//Problem problem = new Problem(count,  1.0/2.0); // 5000 good result
 		//Problem problem = new Problem(count, -1.0/2.0); // 5000 good result
-		//Problem problem = new Problem(count, -2.0/3.0); // 5000 good result
+		Problem problem = new Problem(count, -2.0/3.0); // 5000 good result
 		//Problem problem = new Problem(count, -1.0/5.0); // 5000 good result
 		return problem;
 	}
