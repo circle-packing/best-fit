@@ -242,8 +242,7 @@ public class BestFitSolver extends Solver {
 	public void report() {
 		LOG.info(
 			  "\n\tOverlap: " + getSolution().calculateOverlap()
-			+ "\n\tRadius overlap: " + getSolution().calculateOverlapRadius()
-			+ "\n\tNaN: " + getSolution().countNaN()
+			+ (getSolution().countNaN() > 0 ? "\n\tNaN positions present :(" : "")
 			+ "\n\tPacked " + getSolution().getLocations().size() + " of " + getProblem().getCircles().size() + " circles."
 			+ "\n\t" + circlesToPack.size() + " still need to be packed."
 			+ "\n\tEnclosing circle size is " + enclosingCircle.getCircle().getRadius() + ".");
