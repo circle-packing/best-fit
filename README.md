@@ -10,7 +10,8 @@ The project was made using IntelliJ IDEA.
 A free community edition is available [here](https://www.jetbrains.com/idea/#chooseYourEdition).
 
 It's a Maven project, however I wasn't able to run it without using IntelliJ IDEA.
-I'm not sure why yet, if I find the problem I will update this readme, but any help is appreciated.
+I'm not sure why yet, some other people online had similar problems, but none of the solutions worked for me.
+If I find what's causing problem I will update this readme, but any help is appreciated.
 Sorry for the inconvenience.
 
 ## Building & Running
