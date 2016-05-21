@@ -14,6 +14,9 @@ I'm not sure why yet, some other people online had similar problems, but none of
 If I find what's causing problem I will update this readme, but any help is appreciated.
 Sorry for the inconvenience.
 
+It might also work in other IDE's, but that's untested.
+In the following text I assume you use IntelliJ IDEA.
+
 ## Building & Running
 
 1. Install IntelliJ IDEA
